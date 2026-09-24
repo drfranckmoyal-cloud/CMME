@@ -5,6 +5,7 @@ pub mod backup;
 pub mod demo;
 pub mod domain;
 pub mod error;
+pub mod fiches;
 pub mod import;
 pub mod keystore;
 pub mod research;

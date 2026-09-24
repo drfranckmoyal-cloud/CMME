@@ -122,13 +122,16 @@ struct Status {
 }
 
 #[tauri::command]
-fn app_status(state: State<AppState>) -> R<Status> {
+async fn app_status(state: State<'_, AppState>) -> R<Status> {
+    // Chaque verrou est pris puis relâché avant le suivant (pas de verrou tenu pendant un autre).
+    let profile = state.profile.lock().unwrap().clone();
     let g = state.store.lock().unwrap();
+    let password_required = clinique_password_required(&state, profile.as_deref(), g.as_ref());
     let macos = std::process::Command::new("sw_vers").arg("-productVersion").output().ok().map(|o| String::from_utf8_lossy(&o.stdout).trim().to_string());
     Ok(Status {
         app_version: APP_VERSION,
         unlocked: g.is_some(),
-        profile: state.profile.lock().unwrap().clone(),
+        profile,
         clinique_exists: state.db_path("clinique").exists(),
         demo_exists: state.db_path("demo").exists(),
         practitioner: g.as_ref().and_then(|s| s.setting("practitioner_name").ok().flatten()),
@@ -137,39 +140,50 @@ fn app_status(state: State<AppState>) -> R<Status> {
         data_dir: state.data_dir.to_string_lossy().into(),
         keychain: if cfg!(debug_assertions) { "fichier de développement (données fictives uniquement)" } else { "trousseau macOS" },
         macos_version: macos,
-        password_required: clinique_password_required(&state, g.as_ref()),
+        password_required,
     })
 }
 
-/// Lit le réglage dans la base clinique (ouverte brièvement avec la clé du trousseau si l'app est verrouillée).
-fn clinique_password_required(state: &AppState, open: Option<&Store>) -> bool {
-    if state.profile.lock().map(|p| p.as_deref() == Some("clinique")).unwrap_or(false) {
+/// Réglage « mot de passe à l'ouverture », recopié dans un petit fichier non secret à côté de la base
+/// (aucune donnée clinique) : l'écran d'accueil n'a pas besoin du trousseau pour savoir quoi afficher.
+fn prefs_path(state: &AppState) -> PathBuf {
+    state.data_dir.join("clinique").join("reglages.json")
+}
+
+fn clinique_password_required(state: &AppState, profile: Option<&str>, open: Option<&Store>) -> bool {
+    if profile == Some("clinique") {
         if let Some(s) = open {
             return s.password_required().unwrap_or(true);
         }
     }
-    let path = state.db_path("clinique");
-    if !path.exists() {
-        return true;
+    std::fs::read_to_string(prefs_path(state))
+        .ok()
+        .and_then(|t| serde_json::from_str::<Value>(&t).ok())
+        .and_then(|v| v.get("password_required").and_then(|b| b.as_bool()))
+        .unwrap_or(true)
+}
+
+fn write_prefs(state: &AppState, required: bool) -> R<()> {
+    let p = prefs_path(state);
+    if let Some(d) = p.parent() {
+        std::fs::create_dir_all(d).map_err(|e| err(e.into()))?;
     }
-    match state.keys.get(&AppState::account("clinique")) {
-        Ok(Some(k)) => Store::open(&path, &k, false, "lecture").and_then(|s| s.password_required()).unwrap_or(true),
-        _ => true,
-    }
+    std::fs::write(&p, json!({ "password_required": required }).to_string()).map_err(|e| err(e.into()))
 }
 
 #[tauri::command]
-fn set_password_required(state: State<AppState>, required: bool, password: String) -> R<()> {
+async fn set_password_required(state: State<'_, AppState>, required: bool, password: String) -> R<()> {
     state.with(|s| {
         if !required && !s.verify_app_password(&password)? {
             return Err(CoreError::BadSecret);
         }
         s.set_password_required(required)
-    })
+    })?;
+    write_prefs(&state, required)
 }
 
 #[tauri::command]
-fn setup_clinique(state: State<AppState>, practitioner: String, password: String) -> R<()> {
+async fn setup_clinique(state: State<'_, AppState>, practitioner: String, password: String) -> R<()> {
     let path = state.db_path("clinique");
     if path.exists() {
         return Err(err(CoreError::Refused("un profil clinique existe déjà".into())));
@@ -191,7 +205,7 @@ fn setup_clinique(state: State<AppState>, practitioner: String, password: String
 }
 
 #[tauri::command]
-fn unlock(state: State<AppState>, profile: String, password: Option<String>) -> R<()> {
+async fn unlock(state: State<'_, AppState>, profile: String, password: Option<String>) -> R<()> {
     check_profile(&profile)?;
     let path = state.db_path(&profile);
     let account = AppState::account(&profile);
@@ -232,14 +246,14 @@ fn unlock(state: State<AppState>, profile: String, password: Option<String>) -> 
 }
 
 #[tauri::command]
-fn lock(state: State<AppState>) -> R<()> {
+async fn lock(state: State<'_, AppState>) -> R<()> {
     *state.store.lock().unwrap() = None;
     Ok(())
 }
 
 /// Réessayer après une erreur disque : rouvre la base avec la même clé (connexion neuve).
 #[tauri::command]
-fn reconnect(state: State<AppState>) -> R<()> {
+async fn reconnect(state: State<'_, AppState>) -> R<()> {
     let profile = state.profile.lock().unwrap().clone().ok_or_else(|| err(CoreError::Refused("aucun profil ouvert".into())))?;
     let mut g = state.store.lock().unwrap();
     let author = g.as_ref().map(|s| s.author.clone()).ok_or_else(|| err(CoreError::Refused("application verrouillée".into())))?;
@@ -250,12 +264,12 @@ fn reconnect(state: State<AppState>) -> R<()> {
 }
 
 #[tauri::command]
-fn change_password(state: State<AppState>, current: String, new_password: String) -> R<()> {
+async fn change_password(state: State<'_, AppState>, current: String, new_password: String) -> R<()> {
     state.with(|s| s.set_app_password(Some(&current), &new_password))
 }
 
 #[tauri::command]
-fn verify_password(state: State<AppState>, password: String) -> R<bool> {
+async fn verify_password(state: State<'_, AppState>, password: String) -> R<bool> {
     if state.is_demo() {
         return Ok(true);
     }
@@ -265,7 +279,7 @@ fn verify_password(state: State<AppState>, password: String) -> R<bool> {
 // ------------------------------------------------------------------ Référentiels
 
 #[tauri::command]
-fn get_catalog() -> Value {
+async fn get_catalog() -> Value {
     json!({
         "catalog": catalog::catalog(),
         "sextants": SEXTANTS.iter().map(|(k, l, t)| json!({"key": k, "label": l, "teeth": t})).collect::<Vec<_>>(),
@@ -281,105 +295,105 @@ fn get_catalog() -> Value {
 // ------------------------------------------------------------------ Consultation
 
 #[tauri::command]
-fn create_dossier(state: State<AppState>, code: Option<String>, identity: Option<IdentityInput>) -> R<Value> {
+async fn create_dossier(state: State<'_, AppState>, code: Option<String>, identity: Option<IdentityInput>) -> R<Value> {
     let demo = state.is_demo();
     state.with(|s| Ok(serde_json::to_value(s.create_dossier(code, identity, demo)?)?))
 }
 
 #[tauri::command]
-fn new_encounter(state: State<AppState>, patient_id: String) -> R<Value> {
+async fn new_encounter(state: State<'_, AppState>, patient_id: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.new_encounter_for_patient(&patient_id)?)?))
 }
 
 #[tauri::command]
-fn load_encounter(state: State<AppState>, id: String) -> R<Value> {
+async fn load_encounter(state: State<'_, AppState>, id: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.load_encounter(&id, true)?)?))
 }
 
 #[tauri::command]
-fn update_identity(state: State<AppState>, patient_id: String, identity: IdentityInput) -> R<()> {
+async fn update_identity(state: State<'_, AppState>, patient_id: String, identity: IdentityInput) -> R<()> {
     state.with(|s| s.update_identity(&patient_id, identity))
 }
 
 #[tauri::command]
-fn save_fields(state: State<AppState>, id: String, version: i64, inputs: Vec<FieldInput>) -> R<Value> {
+async fn save_fields(state: State<'_, AppState>, id: String, version: i64, inputs: Vec<FieldInput>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.save_fields(&id, version, inputs)?)?))
 }
 
 #[tauri::command]
-fn set_sextant(state: State<AppState>, id: String, version: i64, input: SextantInput) -> R<Value> {
+async fn set_sextant(state: State<'_, AppState>, id: String, version: i64, input: SextantInput) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.set_sextant(&id, version, input)?)?))
 }
 
 #[tauri::command]
-fn set_exposure_group(state: State<AppState>, id: String, version: i64, group: String, none_reported: bool, categories: Vec<String>) -> R<Value> {
+async fn set_exposure_group(state: State<'_, AppState>, id: String, version: i64, group: String, none_reported: bool, categories: Vec<String>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.set_exposure_group(&id, version, &group, none_reported, categories)?)?))
 }
 
 #[tauri::command]
-fn update_exposure(state: State<AppState>, id: String, version: i64, group: String, category: String, patch: ExposurePatch) -> R<Value> {
+async fn update_exposure(state: State<'_, AppState>, id: String, version: i64, group: String, category: String, patch: ExposurePatch) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.update_exposure(&id, version, &group, &category, patch)?)?))
 }
 
 #[tauri::command]
-fn apply_protocol(state: State<AppState>, id: String, version: i64, protocol: Option<String>) -> R<Value> {
+async fn apply_protocol(state: State<'_, AppState>, id: String, version: i64, protocol: Option<String>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.apply_protocol(&id, version, protocol)?)?))
 }
 
 #[tauri::command]
-fn update_prevention_action(state: State<AppState>, id: String, version: i64, action: String, patch: PreventionPatch) -> R<Value> {
+async fn update_prevention_action(state: State<'_, AppState>, id: String, version: i64, action: String, patch: PreventionPatch) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.update_prevention_action(&id, version, &action, patch)?)?))
 }
 
 #[tauri::command]
-fn confirm_prevention(state: State<AppState>, id: String, version: i64) -> R<Value> {
+async fn confirm_prevention(state: State<'_, AppState>, id: String, version: i64) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.confirm_prevention(&id, version)?)?))
 }
 
 #[tauri::command]
-fn recap(state: State<AppState>, id: String) -> R<Value> {
+async fn recap(state: State<'_, AppState>, id: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.recap(&id)?)?))
 }
 
 #[tauri::command]
-fn validate_encounter(state: State<AppState>, id: String, version: i64) -> R<Value> {
+async fn validate_encounter(state: State<'_, AppState>, id: String, version: i64) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.validate_encounter(&id, version)?)?))
 }
 
 #[tauri::command]
-fn start_amendment(state: State<AppState>, id: String, version: i64, reason: String) -> R<Value> {
+async fn start_amendment(state: State<'_, AppState>, id: String, version: i64, reason: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.start_amendment(&id, version, &reason)?)?))
 }
 
 #[tauri::command]
-fn history(state: State<AppState>, id: String) -> R<Value> {
+async fn history(state: State<'_, AppState>, id: String) -> R<Value> {
     state.with(|s| Ok(json!({"revisions": s.revisions(&id)?, "audit": s.audit_for(&id)?})))
 }
 
 #[tauri::command]
-fn discard_empty_draft(state: State<AppState>, id: String) -> R<()> {
+async fn discard_empty_draft(state: State<'_, AppState>, id: String) -> R<()> {
     state.with(|s| s.discard_empty_draft(&id))
 }
 
 // ------------------------------------------------------------------ Tableau, statistiques
 
 #[tauri::command]
-fn list_encounters(state: State<AppState>, filter: Filter, with_identity: bool) -> R<Value> {
+async fn list_encounters(state: State<'_, AppState>, filter: Filter, with_identity: bool) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.list_encounters(&filter, with_identity)?)?))
 }
 
 #[tauri::command]
-fn patient_encounters(state: State<AppState>, patient_id: String) -> R<Value> {
+async fn patient_encounters(state: State<'_, AppState>, patient_id: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.patient_encounters(&patient_id)?)?))
 }
 
 #[tauri::command]
-fn stats(state: State<AppState>, filter: Filter) -> R<Value> {
+async fn stats(state: State<'_, AppState>, filter: Filter) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.stats(&filter)?)?))
 }
 
 #[tauri::command]
-fn home_summary(state: State<AppState>) -> R<Value> {
+async fn home_summary(state: State<'_, AppState>) -> R<Value> {
     let clinical = !state.is_demo();
     state.with(|s| {
         let rows = s.all_rows(clinical)?;
@@ -399,94 +413,94 @@ fn home_summary(state: State<AppState>) -> R<Value> {
 // ------------------------------------------------------------------ Import
 
 #[tauri::command]
-fn import_preview(state: State<AppState>, path: String) -> R<Value> {
+async fn import_preview(state: State<'_, AppState>, path: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(import::preview(s, Path::new(&path))?)?))
 }
 
 #[tauri::command]
-fn import_stage(state: State<AppState>, path: String, config: Vec<SheetConfig>) -> R<Value> {
+async fn import_stage(state: State<'_, AppState>, path: String, config: Vec<SheetConfig>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.import_stage(Path::new(&path), config)?)?))
 }
 
 #[tauri::command]
-fn import_documents(state: State<AppState>) -> R<Value> {
+async fn import_documents(state: State<'_, AppState>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.import_documents()?)?))
 }
 
 #[tauri::command]
-fn import_records(state: State<AppState>, document_id: String, status: Option<String>) -> R<Value> {
+async fn import_records(state: State<'_, AppState>, document_id: String, status: Option<String>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.import_records(&document_id, status.as_deref())?)?))
 }
 
 #[tauri::command]
-fn import_decide(state: State<AppState>, record_id: String, target: String, decision: String, value: Option<Value>, justification: Option<String>) -> R<()> {
+async fn import_decide(state: State<'_, AppState>, record_id: String, target: String, decision: String, value: Option<Value>, justification: Option<String>) -> R<()> {
     state.with(|s| s.import_decide(&record_id, &target, &decision, value, justification))
 }
 
 #[tauri::command]
-fn import_link(state: State<AppState>, record_id: String, decision: String, patient_id: Option<String>) -> R<()> {
+async fn import_link(state: State<'_, AppState>, record_id: String, decision: String, patient_id: Option<String>) -> R<()> {
     state.with(|s| s.import_link(&record_id, &decision, patient_id))
 }
 
 #[tauri::command]
-fn import_exclude(state: State<AppState>, record_id: String, reason: String) -> R<()> {
+async fn import_exclude(state: State<'_, AppState>, record_id: String, reason: String) -> R<()> {
     state.with(|s| s.import_exclude(&record_id, &reason))
 }
 
 #[tauri::command]
-fn import_reinclude(state: State<AppState>, record_id: String) -> R<()> {
+async fn import_reinclude(state: State<'_, AppState>, record_id: String) -> R<()> {
     state.with(|s| s.import_reinclude(&record_id))
 }
 
 #[tauri::command]
-fn import_commit(state: State<AppState>, document_id: String, record_ids: Option<Vec<String>>) -> R<Value> {
+async fn import_commit(state: State<'_, AppState>, document_id: String, record_ids: Option<Vec<String>>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.import_commit(&document_id, record_ids)?)?))
 }
 
 #[tauri::command]
-fn merge_patients(state: State<AppState>, source: String, target: String, reason: String) -> R<String> {
+async fn merge_patients(state: State<'_, AppState>, source: String, target: String, reason: String) -> R<String> {
     state.with(|s| s.merge_patients(&source, &target, &reason))
 }
 
 #[tauri::command]
-fn undo_merge(state: State<AppState>, merge_id: String) -> R<()> {
+async fn undo_merge(state: State<'_, AppState>, merge_id: String) -> R<()> {
     state.with(|s| s.undo_merge(&merge_id))
 }
 
 #[tauri::command]
-fn merges(state: State<AppState>) -> R<Value> {
+async fn merges(state: State<'_, AppState>) -> R<Value> {
     state.with(|s| Ok(json!({"merges": s.merges()?, "candidates": s.merge_candidates()?})))
 }
 
 // ------------------------------------------------------------------ Étude et export
 
 #[tauri::command]
-fn projects(state: State<AppState>) -> R<Value> {
+async fn projects(state: State<'_, AppState>) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.projects()?)?))
 }
 
 #[tauri::command]
-fn create_project(state: State<AppState>, input: ProjectInput) -> R<Value> {
+async fn create_project(state: State<'_, AppState>, input: ProjectInput) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.create_project(input)?)?))
 }
 
 #[tauri::command]
-fn selection(state: State<AppState>, project_id: String) -> R<Value> {
+async fn selection(state: State<'_, AppState>, project_id: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.selection(&project_id)?)?))
 }
 
 #[tauri::command]
-fn set_eligibility(state: State<AppState>, project_id: String, patient_id: String, excluded_reason: Option<String>) -> R<()> {
+async fn set_eligibility(state: State<'_, AppState>, project_id: String, patient_id: String, excluded_reason: Option<String>) -> R<()> {
     state.with(|s| s.set_eligibility(&project_id, &patient_id, excluded_reason))
 }
 
 #[tauri::command]
-fn freeze_export(state: State<AppState>, project_id: String, exact_dates: bool) -> R<Value> {
+async fn freeze_export(state: State<'_, AppState>, project_id: String, exact_dates: bool) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.freeze_export(&project_id, exact_dates, APP_VERSION)?)?))
 }
 
 #[tauri::command]
-fn snapshots(state: State<AppState>, project_id: String) -> R<Value> {
+async fn snapshots(state: State<'_, AppState>, project_id: String) -> R<Value> {
     state.with(|s| Ok(serde_json::to_value(s.snapshots(&project_id)?)?))
 }
 
@@ -502,7 +516,7 @@ fn refuse_icloud(dir: &Path) -> R<()> {
 }
 
 #[tauri::command]
-fn write_snapshot(state: State<AppState>, snapshot_id: String, dir: String) -> R<String> {
+async fn write_snapshot(state: State<'_, AppState>, snapshot_id: String, dir: String) -> R<String> {
     refuse_icloud(Path::new(&dir))?;
     state.with(|s| s.write_snapshot(&snapshot_id, Path::new(&dir)))
 }
@@ -510,19 +524,19 @@ fn write_snapshot(state: State<AppState>, snapshot_id: String, dir: String) -> R
 // ------------------------------------------------------------------ Sauvegarde
 
 #[tauri::command]
-fn backup_create(state: State<AppState>, dir: String, passphrase: String) -> R<Value> {
+async fn backup_create(state: State<'_, AppState>, dir: String, passphrase: String) -> R<Value> {
     refuse_icloud(Path::new(&dir))?;
     state.with(|s| Ok(serde_json::to_value(s.create_backup(Path::new(&dir), &passphrase, APP_VERSION)?)?))
 }
 
 #[tauri::command]
-fn backup_inspect(path: String, passphrase: String) -> R<Value> {
+async fn backup_inspect(path: String, passphrase: String) -> R<Value> {
     Ok(serde_json::to_value(backup::inspect_backup(Path::new(&path), &passphrase).map_err(err)?).unwrap())
 }
 
 /// Restauration depuis l'application ouverte : réauthentification, copie de sécurité, remplacement atomique.
 #[tauri::command]
-fn backup_restore(state: State<AppState>, path: String, passphrase: String, password: String) -> R<Value> {
+async fn backup_restore(state: State<'_, AppState>, path: String, passphrase: String, password: String) -> R<Value> {
     let profile = state.profile.lock().unwrap().clone().unwrap_or_default();
     if profile != "clinique" {
         return Err(err(CoreError::Refused("restauration disponible dans le profil clinique".into())));
@@ -549,7 +563,7 @@ fn backup_restore(state: State<AppState>, path: String, passphrase: String, pass
 
 /// Premier lancement sur un nouveau Mac : nouvelle clé dans le trousseau, restauration depuis la phrase.
 #[tauri::command]
-fn restore_first_run(state: State<AppState>, path: String, passphrase: String) -> R<Value> {
+async fn restore_first_run(state: State<'_, AppState>, path: String, passphrase: String) -> R<Value> {
     let target = state.db_path("clinique");
     if target.exists() {
         return Err(err(CoreError::Refused("un profil clinique existe déjà sur ce Mac : restaurez depuis Sauvegarde".into())));

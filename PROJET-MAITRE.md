@@ -82,6 +82,16 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
   avant import au même endroit. Outil : `crates/core/examples/import_historique.rs` (règles conservatrices, décisions
   justifiées, aucune fusion). Résultat : 251 consultations historiques ; 9 lignes exclues (5 sans nom, 4 sans donnée
   clinique) ; 34 valeurs marquées indisponibles ; 2 groupes d'identités répétées laissés à l'arbitrage de Franck.
+- 24/09/2026 — Corrections de Franck (code auto, sans IPP, date du jour JJ/MM/AAAA, sans type de visite ni source du
+  diagnostic, Mérycisme + commentaire TCA, dentiste traitant, sans douleurs dentaires). Mot de passe d'ouverture
+  désactivé à sa demande (réglage réversible, base toujours chiffrée). Blocage au démarrage corrigé (deux verrous
+  internes pris l'un dans l'autre).
+- 24/09/2026 — Intégration des 183 fiches Pages (2024-2025, 2025-2026), lues directement dans les fichiers .pages
+  (`research/scripts/pages_en_texte.py`, vérifié identique à l'export Pages sur 56 fiches) puis
+  `lire_fiches_pages.py` et `examples/integrer_fiches.rs`. Résultat : 135 consultations du tableau complétées
+  (date, CAO, texte de la fiche…, amendement tracé), 5 rattachées malgré une orthographe voisine, 20 nouveaux
+  dossiers, 9 conflits laissés à Franck (8 BEWE divergents, 1 nom porté par deux dossiers), 19 fiches écartées
+  (18 « template copie » sans nom, 1 non remplie). Base : 273 consultations, 151 datées.
 - 24/09/2026 — App installée dans /Applications et ajoutée au Dock. Franck confirme que la version finale s'ouvre.
 
 ## Garde-fous

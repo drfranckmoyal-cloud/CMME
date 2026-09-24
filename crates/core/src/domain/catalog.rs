@@ -404,6 +404,7 @@ fn build() -> Catalog {
         B::new("prevention_protocol_legacy_raw", "historique", "historique_main", "Prévention (texte source)", "Legacy prevention (raw)", Text).legacy().done(),
         B::new("other_wear_legacy", "historique", "historique_main", "Autres usures (ancienne colonne)", "Legacy other wear", Choice).opts(YES_NO).legacy().done(),
         B::new("dmft_total_historical", "historique", "historique_main", "CAO total historique", "Historical DMFT total", Number).num(0.0, 32.0, true, None).legacy().done(),
+        B::new("fiche_pages_text", "historique", "historique_main", "Fiche de consultation Pages (texte intégral)", "Pages consultation form (full text)", Text).legacy().wide().done(),
         B::new("observations_legacy", "historique", "historique_main", "Observations (ancien tableau)", "Legacy observations", Text).wide().legacy().done(),
     ];
     Catalog { form_version: FORM_VERSION, protocol_version: PROTOCOL_VERSION, sections, fields }
