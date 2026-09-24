@@ -92,6 +92,13 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
   (date, CAO, texte de la fiche…, amendement tracé), 5 rattachées malgré une orthographe voisine, 20 nouveaux
   dossiers, 9 conflits laissés à Franck (8 BEWE divergents, 1 nom porté par deux dossiers), 19 fiches écartées
   (18 « template copie » sans nom, 1 non remplie). Base : 273 consultations, 151 datées.
+- 24/09/2026 — BEWE divergents : valeur du tableau conservée (décision de Franck). « Hospitalisation longue durée »
+  fusionnée dans « Hospitalisation complète » (migration de schéma v2). Clé du trousseau réglée sans alerte (-A, choix
+  de Franck). 3 consultations supprimées (service « autre » ou non renseigné).
+- 24/09/2026 — Projet d'étude « ancien + nouveau recueil, toutes périodes » créé ; export figé écrit dans
+  `~/CMME-donnees/exports/` : 270 patients inclus (une visite index chacun), BEWE analysable 258/270, médiane 4
+  [0–7], ≥9 : 57/258 ; recalcul indépendant identique. Écran Étude : choix « ancien + nouveau » ou « nouveau
+  uniquement », période facultative.
 - 24/09/2026 — App installée dans /Applications et ajoutée au Dock. Franck confirme que la version finale s'ouvre.
 
 ## Garde-fous

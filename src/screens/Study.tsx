@@ -54,7 +54,7 @@ export function Study({ demo }: { demo: boolean }) {
           <div style={{ marginTop: 10 }}>
             {projects.map((p) => (
               <button key={p.id} type="button" className="rec" aria-current={p.id === pid} onClick={() => setPid(p.id)}>
-                <strong>{p.name}</strong><div className="small muted">{p.period_start ?? "…"} → {p.period_end ?? "…"} · {p.include_legacy && p.include_prospective ? "historique et prospectif" : p.include_legacy ? "historique" : "prospectif"}{p.plan_version ? ` · plan ${p.plan_version}` : ""}</div>
+                <strong>{p.name}</strong><div className="small muted">{p.period_start || p.period_end ? `${p.period_start ?? "…"} → ${p.period_end ?? "…"}` : "toutes périodes"} · {p.include_legacy ? "ancien + nouveau recueil" : "nouveau recueil uniquement"}{p.plan_version ? ` · plan ${p.plan_version}` : ""}</div>
               </button>
             ))}
           </div>
@@ -65,8 +65,12 @@ export function Study({ demo }: { demo: boolean }) {
             <div className="field wide"><div className="label"><span>Nom</span></div><input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="Étude rétrospective BEWE" /></div>
             <div className="field"><div className="label"><span>Début de période (facultatif)</span></div><input type="date" value={form.period_start} onChange={(e) => setForm({ ...form, period_start: e.target.value })} /></div>
             <div className="field"><div className="label"><span>Fin de période (facultatif)</span></div><input type="date" value={form.period_end} onChange={(e) => setForm({ ...form, period_end: e.target.value })} /></div>
-            <label className="check"><input type="checkbox" checked={form.include_legacy} onChange={(e) => setForm({ ...form, include_legacy: e.target.checked })} />Recueil historique</label>
-            <label className="check"><input type="checkbox" checked={form.include_prospective} onChange={(e) => setForm({ ...form, include_prospective: e.target.checked })} />Recueil prospectif</label>
+            <div className="field wide"><div className="label"><span>Données analysées</span></div>
+              <div className="seg" role="group" aria-label="Données analysées">
+                <button type="button" aria-pressed={form.include_legacy} onClick={() => setForm({ ...form, include_legacy: true, include_prospective: true })}>Ancien + nouveau recueil</button>
+                <button type="button" aria-pressed={!form.include_legacy} onClick={() => setForm({ ...form, include_legacy: false, include_prospective: true })}>Nouveau recueil uniquement</button>
+              </div>
+            </div>
             <label className="check wide"><input type="checkbox" checked={form.exclude_open_anomalies} onChange={(e) => setForm({ ...form, exclude_open_anomalies: e.target.checked })} />Exclure les consultations avec une anomalie encore ouverte</label>
             <div className="field"><div className="label"><span>Version du plan d'analyse</span></div><input value={form.plan_version} onChange={(e) => setForm({ ...form, plan_version: e.target.value })} placeholder="ex. PLAN-2026-10-v1" /></div>
             <div className="field" style={{ alignSelf: "end" }}><button className="btn primary" type="submit" disabled={form.name.trim().length < 3}>Créer le projet</button></div>
