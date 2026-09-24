@@ -1,0 +1,191 @@
+<title>CMME Erosive Wear Protocol</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=IBM+Plex+Sans:wght@500;600&family=IBM+Plex+Mono:wght@400&display=swap">
+<style>
+:root{
+  --ground:#f7f6f3; --paper:#fffefb; --ink:#23202b; --muted:#6a6475; --line:#e4e0e8;
+  --accent:#5b3f8c; --tint:#efe9f6; --note:#8a5a00; --note-bg:#fdf3df;
+  color-scheme:light;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#17151b; --paper:#201d25; --ink:#ece8f2; --muted:#aea7b9; --line:#38323f;
+  --accent:#c7b0f2; --tint:#322a40; --note:#f0c575; --note-bg:#3a2f1c; color-scheme:dark;}}
+:root[data-theme="dark"]{
+  --ground:#17151b; --paper:#201d25; --ink:#ece8f2; --muted:#aea7b9; --line:#38323f;
+  --accent:#c7b0f2; --tint:#322a40; --note:#f0c575; --note-bg:#3a2f1c; color-scheme:dark;}
+*{box-sizing:border-box}
+body{background:var(--ground);color:var(--ink);font:17px/1.62 "Source Serif 4",Georgia,serif;padding-inline:16px;padding-block:28px 72px}
+.doc{max-width:780px;margin:0 auto;background:var(--paper);border:1px solid var(--line);border-radius:6px;padding:clamp(22px,5vw,56px)}
+h1,h2,h3,.label,th,.meta,.pill{font-family:"IBM Plex Sans",system-ui,sans-serif}
+h1{font-size:clamp(24px,4.2vw,31px);line-height:1.2;font-weight:600;letter-spacing:-.4px;margin:6px 0 14px;text-wrap:balance}
+h2{font-size:18px;font-weight:600;margin:38px 0 10px;padding-top:14px;border-top:1px solid var(--line);color:var(--accent);text-wrap:balance}
+h3{font-size:15px;font-weight:600;margin:20px 0 6px}
+p{margin:0 0 12px;max-width:68ch}
+ul,ol{margin:0 0 12px;padding-left:22px}
+li{margin-bottom:4px}
+.label{font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.meta{font-size:13px;color:var(--muted);display:grid;grid-template-columns:minmax(120px,auto) 1fr;gap:4px 16px;margin:16px 0 0}
+.meta b{color:var(--ink);font-weight:600}
+.note{background:var(--note-bg);color:var(--note);border-radius:6px;padding:12px 16px;font:14px/1.55 "IBM Plex Sans",system-ui,sans-serif;margin:18px 0}
+.pill{display:inline-block;font-size:12px;font-weight:600;background:var(--tint);color:var(--accent);border-radius:20px;padding:2px 9px;margin-right:6px}
+.tablewrap{overflow-x:auto;margin:10px 0 14px}
+table{border-collapse:collapse;width:100%;font-size:15px}
+th{font-size:12px;text-align:left;color:var(--muted);font-weight:600;letter-spacing:.04em;padding:8px 10px;border-bottom:1px solid var(--line)}
+td{padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+td.num{font-variant-numeric:tabular-nums;white-space:nowrap}
+code{font:14px "IBM Plex Mono",monospace;background:var(--tint);padding:1px 5px;border-radius:4px}
+.refs li{font-size:15px}
+.open li{margin-bottom:6px}
+</style>
+
+<div class="doc">
+  <div class="label">Study protocol · draft v0.1 · for internal review</div>
+  <h1>Erosive tooth wear in adults with eating disorders attending a specialist hospital service: a cross-sectional study</h1>
+  <p><span class="pill">Observational</span><span class="pill">Cross-sectional</span><span class="pill">Single centre</span><span class="pill">STROBE</span></p>
+  <div class="meta">
+    <span>Principal investigator</span><b>Dr Franck Moyal, dental surgeon, CMME</b>
+    <span>Setting</span><b>CMME (Clinique des Maladies Mentales et de l'Encéphale), GHU Paris Psychiatrie &amp; Neurosciences, Sainte-Anne Hospital, Paris, France</b>
+    <span>Sponsor / data controller</span><b>GHU Paris Psychiatrie &amp; Neurosciences (to be confirmed with the DPO and the DRCI)</b>
+    <span>Regulatory framework</span><b>CNIL reference methodology MR-004 (to be confirmed)</b>
+    <span>Version / date</span><b>0.1 · 25 September 2026</b>
+  </div>
+  <div class="note">Brouillon préparé par Claude à partir des décisions de Franck Moyal du 24/09/2026. Tout ce qui est entre crochets ou marqué « to be confirmed » reste à valider. Les chiffres de faisabilité sont provisoires ; ce protocole ne rapporte aucun résultat.</div>
+
+  <h2>1. Background and rationale</h2>
+  <p>Eating disorders (EDs) are associated with erosive tooth wear, mainly through self-induced vomiting, but also through dietary acids, reflux and oral hygiene habits. Previous studies have compared patients with EDs and controls or explored factors associated with erosion severity [2–4]. Fewer reports describe the dental findings of an unselected population screened within a routine hospital ED pathway, using a standardised erosion index.</p>
+  <p>Since [year to be confirmed], adults treated at the CMME have been offered a dental screening consultation that includes the Basic Erosive Wear Examination (BEWE) [1]. The records of these consultations form an existing dataset that can describe the burden of erosive wear in this population and document care needs and preventive measures. A structured electronic recording tool (CMME Recueil) is now used for new consultations, which improves data completeness for future analyses.</p>
+
+  <h2>2. Objectives</h2>
+  <h3>Primary objective</h3>
+  <p>To describe the distribution of erosive tooth wear, measured by the BEWE total score, in adults with an ED at their first dental screening consultation at the CMME.</p>
+  <h3>Secondary objectives</h3>
+  <ol>
+    <li>To estimate the proportion of patients with any erosive wear (BEWE &gt; 0) and with BEWE total ≥ 9, and the distribution across the BEWE risk categories (0–2, 3–8, 9–13, ≥ 14).</li>
+    <li>To compare BEWE scores between patients with and without reported vomiting.</li>
+    <li>To describe other documented oral findings (DMFT index, other wear), care needs and preventive measures recorded at the consultation.</li>
+    <li>To report data completeness for each variable, separately for retrospective and prospectively recorded consultations.</li>
+  </ol>
+
+  <h2>3. Study design</h2>
+  <p>Observational, cross-sectional study of routinely collected clinical data. Two data sources are combined and always identified: (a) <b>retrospective records</b> (historical summary spreadsheet and consultation forms), reviewed and imported with source traceability; (b) <b>prospective structured records</b> entered with CMME Recueil during ongoing consultations. The analysis dataset is a dated, frozen, pseudonymised extraction. Each patient contributes one consultation only (the index visit).</p>
+
+  <h2>4. Setting and participants</h2>
+  <h3>Setting</h3>
+  <p>CMME services: expert centre, short-stay unit (SAS), full hospitalisation, day hospital (HDJ) and intensive day hospital. Dental screening consists of an interview, an intraoral examination and, when available, review of a panoramic radiograph.</p>
+  <h3>Eligibility criteria</h3>
+  <ul>
+    <li><b>Inclusion:</b> adults (≥ 18 years) followed at the CMME for an ED, who attended at least one dental screening consultation up to the data-freeze date. The consultation is offered to adult patients only.</li>
+    <li><b>Exclusion:</b> objection to the reuse of data; records without an identifiable patient; consultations not completed (draft records).</li>
+  </ul>
+  <h3>Study period</h3>
+  <p>No lower date limit: all available consultations up to the data-freeze date are eligible. The earliest and latest documented consultation dates will be reported. Undated historical records are retained; their existence and number will be stated.</p>
+  <h3>Index visit</h3>
+  <p>The first eligible consultation of each patient in chronological order. When the order cannot be established from documented dates, the patient is reported as ambiguous and excluded from the main analysis, with a count in the flow diagram.</p>
+
+  <h2>5. Variables</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Variable</th><th>Definition</th><th>Source</th></tr></thead>
+    <tbody>
+      <tr><td>BEWE total (primary)</td><td>Sum of the highest score (0–3) in each of the six sextants, range 0–18 [1]. Computed only when all six sextants are scored.</td><td>Examination; historical records</td></tr>
+      <tr><td>Historical BEWE total</td><td>Exact total recorded without sextant detail. When recorded as a band followed by a number in brackets (e.g. “6–11 (9)”), the bracketed number is the exact total by the investigator's convention; the band is kept.</td><td>Historical records</td></tr>
+      <tr><td>BEWE category</td><td>0–2, 3–8, 9–13, ≥ 14, derived from the exact total only.</td><td>Derived</td></tr>
+      <tr><td>Vomiting</td><td>Historical: yes/no as recorded (time window not standardised). Prospective: never reported / past only / current.</td><td>Interview</td></tr>
+      <tr><td>Age, sex, service</td><td>At the index visit; age bands kept as bands, never converted to midpoints.</td><td>Records</td></tr>
+      <tr><td>ED diagnosis</td><td>As documented in the medical record, with free-text comment.</td><td>Medical record</td></tr>
+      <tr><td>DMFT</td><td>Decayed, missing (due to caries), filled teeth, when recorded.</td><td>Examination</td></tr>
+      <tr><td>Other findings</td><td>Mechanical wear signs, hygiene judgement, care needs, preventive protocol (none, moderate, advanced, customised) and oral hygiene instruction.</td><td>Examination; consultation record</td></tr>
+    </tbody>
+  </table></div>
+  <p>Missing values keep an explicit reason (not recorded, unknown, not assessable…); a missing value is never recoded as “no” or zero.</p>
+
+  <h2>6. Data sources and measurement</h2>
+  <p>All examinations were performed by a single dental surgeon (FM) using the BEWE as described by Bartlett et al. [1]. Historical data were imported from the original spreadsheet and consultation forms with a documented, rule-based procedure: raw source values are preserved, every normalisation rule is recorded, anomalies (e.g. a bracketed total outside its band) are flagged and adjudicated by the investigator, and all decisions are logged. No value is reconstructed (no imputed sextants, no midpoints of bands, no inferred dates).</p>
+
+  <h2>7. Bias</h2>
+  <ul>
+    <li><b>Selection bias:</b> patients referred to or accepting dental screening may differ from the whole ED population; the proportion of eligible CMME patients screened will be described if available.</li>
+    <li><b>Information bias:</b> the historical vomiting variable has no standardised time window; recording practices changed over time; a single examiner without formal calibration.</li>
+    <li><b>Duplicates:</b> identities were reconciled by the investigator; merges are traceable and reversible.</li>
+  </ul>
+
+  <h2>8. Study size</h2>
+  <p>All eligible patients are included; no formal sample size calculation. Provisional count at 24 September 2026: 270 patients with an index visit, of whom 258 have a usable BEWE total. For a proportion near 50%, the 95% confidence interval half-width is about ±6 percentage points with 258 patients.</p>
+
+  <h2>9. Statistical analysis</h2>
+  <ul>
+    <li><b>Description:</b> continuous variables as median [Q1–Q3] and range (mean ± SD in addition); categorical variables as n/N (%) with the denominator of available data. Wilson 95% confidence intervals for proportions.</li>
+    <li><b>Primary outcome:</b> distribution of BEWE total at the index visit, with the proportions of BEWE &gt; 0 and BEWE ≥ 9, and the distribution by category.</li>
+    <li><b>Vomiting comparison:</b> BEWE compared between patients with and without reported vomiting (Mann–Whitney test for the distribution; prevalence ratios with 95% CI for BEWE &gt; 0 and ≥ 9). Historical yes/no and prospective categories are analysed separately. Considered exploratory.</li>
+    <li><b>No imputation</b> of missing data; complete-case analyses with explicit denominators. Any multivariable model will be limited to a few clinically justified covariates chosen before analysis with a methodologist.</li>
+    <li><b>Sensitivity analyses:</b> (1) excluding historical totals flagged as inconsistent; (2) restricted to totals derived from six sextants; (3) restricted to prospectively recorded consultations; (4) excluding identities reconciled by close spelling.</li>
+    <li><b>Reproducibility:</b> analyses run from the frozen export only (checksums recorded in the export manifest), using documented scripts.</li>
+  </ul>
+
+  <h2>10. Data management and confidentiality</h2>
+  <p>Data are stored in CMME Recueil, a local application with an encrypted database (SQLCipher) and no network connection. The analysis dataset is a pseudonymised extraction built from an allow-list of variables: no names, dates of birth, hospital identifiers or free text; a random study code per patient; year of consultation instead of exact dates. The correspondence between study codes and patients remains in the encrypted clinical database. Each extraction is frozen and versioned.</p>
+
+  <h2>11. Ethical and regulatory aspects</h2>
+  <p>This research does not involve the human person within the meaning of French law, as it reuses data collected during routine care. It is expected to comply with the CNIL reference methodology MR-004 [to be confirmed by the DPO]: registration in the sponsor's record of processing activities, registration in the public directory of the Health Data Hub before analysis, individual information of patients and a right to object. Patients who object are excluded from the analysis without any consequence for their care.</p>
+
+  <h2>12. Dissemination</h2>
+  <p>Results will be submitted in English to an international peer-reviewed journal (candidates: <i>Scientific Reports</i>, <i>Journal of Eating Disorders</i>, <i>BMC Oral Health</i>) and reported according to the STROBE statement [5], with relevant RECORD items for routinely collected data [6].</p>
+
+  <h2>13. Timeline (indicative)</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>Step</th><th>Target</th></tr></thead>
+    <tbody>
+      <tr><td>Protocol validation, DPO and DRCI</td><td class="num">Q4 2026</td></tr>
+      <tr><td>Registration and patient information</td><td class="num">Q4 2026</td></tr>
+      <tr><td>Data freeze and analysis</td><td class="num">Q1 2027</td></tr>
+      <tr><td>Manuscript submission</td><td class="num">Q2 2027</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>14. Expected limitations</h2>
+  <ul>
+    <li>Cross-sectional design: no causal inference, no assessment of progression or of the effect of prevention.</li>
+    <li>Single centre, single examiner; results apply to patients screened in this service.</li>
+    <li>Heterogeneous historical recording; many historical records lack an exact consultation date.</li>
+    <li>Vomiting history not standardised in historical records.</li>
+  </ul>
+
+  <h2>STROBE checklist mapping</h2>
+  <div class="tablewrap"><table>
+    <thead><tr><th>STROBE item</th><th>Where addressed</th></tr></thead>
+    <tbody>
+      <tr><td>1 Title and abstract</td><td>Title (design stated)</td></tr>
+      <tr><td>2–3 Background, objectives</td><td>Sections 1–2</td></tr>
+      <tr><td>4 Study design</td><td>Section 3</td></tr>
+      <tr><td>5 Setting</td><td>Section 4</td></tr>
+      <tr><td>6 Participants</td><td>Section 4</td></tr>
+      <tr><td>7 Variables</td><td>Section 5</td></tr>
+      <tr><td>8 Data sources / measurement</td><td>Section 6</td></tr>
+      <tr><td>9 Bias</td><td>Section 7</td></tr>
+      <tr><td>10 Study size</td><td>Section 8</td></tr>
+      <tr><td>11–12 Quantitative variables, statistical methods, missing data, sensitivity analyses</td><td>Sections 5 and 9</td></tr>
+      <tr><td>13 Participants (flow diagram)</td><td>Section 4 (index visit), frozen export quality report</td></tr>
+      <tr><td>14–17 Descriptive data, outcomes, main and other analyses</td><td>Section 9 (planned)</td></tr>
+      <tr><td>18–21 Key results, limitations, interpretation, generalisability</td><td>Section 14 (anticipated)</td></tr>
+      <tr><td>22 Funding</td><td>[to be completed]</td></tr>
+    </tbody>
+  </table></div>
+
+  <h2>Open points to settle</h2>
+  <ol class="open">
+    <li>Start year of the dental screening consultation at the CMME, and whether every eligible patient was offered it (exhaustiveness).</li>
+    <li>Exact regulatory route (MR-004 or internal study) and who acts as data controller.</li>
+    <li>Whether some patients aged 18–19 were recorded only as “&lt; 20”: check that none were minors.</li>
+    <li>Co-authors (ED team physicians, methodologist or statistician) and funding for open-access fees.</li>
+    <li>Target journal, and whether the historical definition of “vomiting” can be documented.</li>
+  </ol>
+
+  <h2>References</h2>
+  <ol class="refs">
+    <li>Bartlett D, Ganss C, Lussi A. Basic Erosive Wear Examination (BEWE): a new scoring system for scientific and clinical needs. Clin Oral Investig. 2008;12(Suppl 1):S65–S68. doi:10.1007/s00784-007-0181-5</li>
+    <li>Eating disorders and oral health: a matched case-control study. PubMed PMID 22288922 [full reference to be completed].</li>
+    <li>Factors affecting the dental erosion severity of patients with eating disorders. BioPsychoSocial Med. 2014;8:25. doi:10.1186/1751-0759-8-25</li>
+    <li>Dental erosion, oral hygiene, and nutrition in eating disorders. PubMed PMID 9062844 [full reference to be completed].</li>
+    <li>von Elm E, et al. The Strengthening the Reporting of Observational Studies in Epidemiology (STROBE) statement. www.strobe-statement.org</li>
+    <li>Benchimol EI, et al. The REporting of studies Conducted using Observational Routinely-collected health Data (RECORD) statement. www.record-statement.org</li>
+  </ol>
+</div>
