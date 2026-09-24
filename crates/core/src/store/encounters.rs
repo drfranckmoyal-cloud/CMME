@@ -943,6 +943,35 @@ impl Store {
         Ok(rows)
     }
 
+    /// Suppression définitive d'une consultation, à la demande explicite du praticien. La source brute
+    /// importée est conservée (ligne marquée exclue avec le motif) ; le dossier disparaît s'il n'a plus
+    /// aucune consultation. Journalisé.
+    pub fn delete_encounter(&mut self, encounter_id: &str, reason: &str) -> Result<()> {
+        if reason.trim().len() < 3 {
+            return Err(CoreError::validation("motif", "motif de suppression obligatoire"));
+        }
+        let author = self.author.clone();
+        let tx = self.conn.transaction()?;
+        let pid: String = tx.query_row("SELECT patient_id FROM encounter WHERE id = ?1", [encounter_id], |r| r.get(0)).optional()?.ok_or_else(|| CoreError::NotFound("consultation".into()))?;
+        for t in ["field_value", "bewe_sextant", "exposure", "prevention_action", "encounter_flag", "encounter_revision"] {
+            tx.execute(&format!("DELETE FROM {t} WHERE encounter_id = ?1"), [encounter_id])?;
+        }
+        tx.execute("UPDATE source_record SET status = 'excluded', exclusion_reason = ?1, encounter_id = NULL WHERE encounter_id = ?2", params![reason.trim(), encounter_id])?;
+        tx.execute("DELETE FROM encounter WHERE id = ?1", [encounter_id])?;
+        let left: i64 = tx.query_row("SELECT count(*) FROM encounter WHERE patient_id = ?1", [&pid], |r| r.get(0))?;
+        if left == 0 {
+            tx.execute("UPDATE source_record SET link_patient_id = NULL WHERE link_patient_id = ?1", [&pid])?;
+            for t in ["patient_identity", "research_eligibility"] {
+                tx.execute(&format!("DELETE FROM {t} WHERE patient_id = ?1"), [&pid])?;
+            }
+            tx.execute("DELETE FROM study_id_map WHERE kind = 'patient' AND local_id = ?1", [&pid])?;
+            tx.execute("DELETE FROM patient WHERE id = ?1", [&pid])?;
+        }
+        audit_on(&tx, &author, "delete_encounter", "encounter", Some(encounter_id), None, None, None, Some(reason.trim()))?;
+        tx.commit()?;
+        Ok(())
+    }
+
     /// Supprime un brouillon jamais validé et sans aucune donnée (création par erreur).
     pub fn discard_empty_draft(&mut self, encounter_id: &str) -> Result<()> {
         let full = self.load_encounter(encounter_id, false)?;
