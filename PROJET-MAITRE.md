@@ -65,6 +65,11 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
   tant que le travail continue ; population adulte (la consultation n'accueille que des adultes) ; visite index =
   première consultation. Publication visée en anglais, revue internationale (rêve : Nature ; voir bilan des revues).
 
+- D13 (25/09) CAO retiré des données d'étude (plus d'export, plus dans le formulaire ; valeurs historiques conservées
+  en lecture). Définition des vomissements pour l'étude : ≥ 3 fois/semaine pendant ≥ 6 mois cumulés (question oui/non
+  ajoutée au formulaire ; l'ancien « oui/non » suit cette définition). Consultation dentaire commencée en décembre 2024,
+  systématique au Centre expert depuis septembre 2025 ; aucun mineur. Protocole v0.2 : `docs/PROTOCOLE_ETUDE.html`.
+
 ## Questions ouvertes
 
 | Question | Qui tranche |
@@ -75,6 +80,8 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 | Cadre institutionnel (DPO, MR-004) pour l'usage réel | Franck / établissement |
 | Signature/notarisation Apple (compte développeur) si diffusion | Franck |
 | H-0146 et H-0251 : même personne ? | Franck |
+| Fiche datée 02/01/2024 rangée dans « CS 02:01:25 » : corriger en 02/01/2025 ? | Franck |
+| Cadre réglementaire (MR-004), co-auteurs, financement : reportés | Franck |
 
 ## Journal
 

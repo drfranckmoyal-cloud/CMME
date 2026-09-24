@@ -226,7 +226,7 @@ fn build() -> Catalog {
                 Block { id: "examen_main", title: None, collapsible: false },
                 Block { id: "examen_bewe", title: None, collapsible: false },
                 Block { id: "examen_constats", title: Some("Autres constats cliniques"), collapsible: false },
-                Block { id: "examen_details", title: Some("Compléments d'examen (CAO, muqueuses, exobuccal)"), collapsible: true },
+                Block { id: "examen_details", title: Some("Compléments d'examen (muqueuses, exobuccal, récessions)"), collapsible: true },
             ],
         },
         Section {
@@ -316,6 +316,8 @@ fn build() -> Catalog {
         B::new("vomiting_lifetime", "expositions", "expositions_main", "Vomissements", "Vomiting history", Choice)
             .opts(&[("never_reported", "Jamais rapportés"), ("past_only", "Anciens uniquement"), ("current", "Actuels")]).essential()
             .hint("« Jamais » seulement après question explicite").done(),
+        B::new("vomiting_criterion_met", "expositions", "expositions_main", "Vomissements ≥ 3 fois par semaine pendant ≥ 6 mois cumulés", "Vomiting ≥3 times/week for ≥6 cumulative months", Choice)
+            .opts(YES_NO).essential().hint("Critère de l'étude").done(),
         B::new("vomiting_days_28d", "expositions", "expositions_main", "Jours avec vomissements (28 j)", "Days with vomiting (28 days)", Number).num(0.0, 28.0, true, Some("jours")).range().show_if("vomiting_lifetime", &["current"]).done(),
         B::new("vomiting_episodes_28d", "expositions", "expositions_main", "Nombre de vomissements (28 j)", "Vomiting episodes (28 days)", Number).num(0.0, 3000.0, true, Some("épisodes")).range().show_if("vomiting_lifetime", &["current"]).done(),
         B::new("vomiting_pattern", "expositions", "expositions_main", "Rythme", "Pattern", Choice)
@@ -364,9 +366,9 @@ fn build() -> Catalog {
         B::new("mucosal_findings", "examen", "examen_details", "Muqueuses", "Mucosal findings", Choice).opts(&[("none_noted", "Rien de particulier noté"), ("present", "Lésion notée")]).missing(EXAM).done(),
         B::new("extraoral_findings", "examen", "examen_details", "Examen exobuccal", "Extraoral findings", Multi)
             .opts(&[("none_noted", "Rien de particulier noté"), ("sialadenosis", "Sialadénose"), ("asymmetry", "Asymétrie"), ("other", "Autre")]).excl(&["none_noted"]).missing(EXAM).done(),
-        B::new("dmft_d", "examen", "examen_details", "CAO — C (cariées)", "DMFT — D", Number).num(0.0, 32.0, true, Some("dents")).missing(EXAM).done(),
-        B::new("dmft_m", "examen", "examen_details", "CAO — A (absentes pour carie)", "DMFT — M", Number).num(0.0, 32.0, true, Some("dents")).missing(EXAM).done(),
-        B::new("dmft_f", "examen", "examen_details", "CAO — O (obturées)", "DMFT — F", Number).num(0.0, 32.0, true, Some("dents")).missing(EXAM).done(),
+        B::new("dmft_d", "historique", "historique_main", "CAO — C (cariées)", "DMFT — D", Number).num(0.0, 32.0, true, Some("dents")).legacy().no_export().done(),
+        B::new("dmft_m", "historique", "historique_main", "CAO — A (absentes pour carie)", "DMFT — M", Number).num(0.0, 32.0, true, Some("dents")).legacy().no_export().done(),
+        B::new("dmft_f", "historique", "historique_main", "CAO — O (obturées)", "DMFT — F", Number).num(0.0, 32.0, true, Some("dents")).legacy().no_export().done(),
         B::new("recession_note", "examen", "examen_details", "Récessions (sites, mm si mesurés)", "Recessions", Text).wide().done(),
         // ---------- Prévention
         B::new("hbd_teaching", "prevention", "prevention_main", "Enseignement HBD", "Oral hygiene instruction", Choice).opts(&[("done", "Réalisé"), ("not_done", "Non réalisé")]).custom().missing(&[]).done(),
@@ -403,7 +405,7 @@ fn build() -> Catalog {
             .hint("Composantes inconnues : rien n'est reconstruit").done(),
         B::new("prevention_protocol_legacy_raw", "historique", "historique_main", "Prévention (texte source)", "Legacy prevention (raw)", Text).legacy().done(),
         B::new("other_wear_legacy", "historique", "historique_main", "Autres usures (ancienne colonne)", "Legacy other wear", Choice).opts(YES_NO).legacy().done(),
-        B::new("dmft_total_historical", "historique", "historique_main", "CAO total historique", "Historical DMFT total", Number).num(0.0, 32.0, true, None).legacy().done(),
+        B::new("dmft_total_historical", "historique", "historique_main", "CAO total historique", "Historical DMFT total", Number).num(0.0, 32.0, true, None).legacy().no_export().done(),
         B::new("fiche_pages_text", "historique", "historique_main", "Fiche de consultation Pages (texte intégral)", "Pages consultation form (full text)", Text).legacy().wide().done(),
         B::new("observations_legacy", "historique", "historique_main", "Observations (ancien tableau)", "Legacy observations", Text).wide().legacy().done(),
     ];
