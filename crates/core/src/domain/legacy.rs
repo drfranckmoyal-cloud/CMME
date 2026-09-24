@@ -233,9 +233,8 @@ pub fn service(raw: &str) -> Option<&'static str> {
         "hdj_intensif"
     } else if s.starts_with("hdj") || s.contains("hopital de jour") {
         "hdj"
-    } else if s.contains("longue") {
-        "hospit_longue"
-    } else if s.contains("hospit") {
+    } else if s.contains("longue") || s.contains("hospit") {
+        // Hospitalisation complète et longue durée : même service (décision de Franck, 24/09/2026).
         "hospit_complete"
     } else if s.contains("centre expert") || s == "ce" {
         "centre_expert"
@@ -322,6 +321,7 @@ pub fn flag_label(flag: &str) -> &'static str {
         "duplicate_exact" => "Ligne identique à une autre",
         "changed_since_previous_version" => "Modifiée depuis la version précédente du fichier",
         "no_identity" => "Ligne sans identité",
+        "bewe_fiche_divergent" => "BEWE de la fiche Pages différent du tableau",
         _ => super::bewe::flag_label(flag),
     }
 }

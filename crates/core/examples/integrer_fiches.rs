@@ -9,16 +9,35 @@ use cmme_core::Store;
 fn main() {
     let args: Vec<String> = std::env::args().collect();
     let json = std::fs::read_to_string(&args[1]).expect("fichier JSON");
-    let fiches: Vec<Fiche> = serde_json::from_str(&json).expect("JSON de fiches");
+    let mut fiches: Vec<Fiche> = serde_json::from_str(&json).expect("JSON de fiches");
+    // --seulement <liste.txt> : ne traiter que ces fichiers ; --garder-bewe-tableau : décision du praticien.
+    if let Some(i) = args.iter().position(|a| a == "--seulement") {
+        let keep: Vec<String> = std::fs::read_to_string(&args[i + 1]).unwrap().lines().map(String::from).collect();
+        fiches.retain(|f| keep.contains(&f.file));
+    }
+    let keep_bewe = args.iter().any(|a| a == "--garder-bewe-tableau");
     let key = KeychainStore { service: "fr.cmme.recueil".into() }.get("db-clinique").unwrap().expect("clé absente");
     let db = match args.iter().position(|a| a == "--essai") {
         Some(i) => std::path::PathBuf::from(&args[i + 1]),
         None => std::path::PathBuf::from(std::env::var("HOME").unwrap()).join("Library/Application Support/fr.cmme.recueil/clinique/cmme.db"),
     };
     let mut s = Store::open(&db, &key, false, "import").unwrap();
+    // --conflits-bewe : reprendre seulement les fiches écartées pour BEWE divergent lors d'un passage précédent.
+    if args.iter().any(|a| a == "--conflits-bewe") {
+        let mut files = vec![];
+        for d in s.import_documents().unwrap().iter().filter(|d| d.format == "pages-txt") {
+            for r in s.import_records(&d.id, Some("excluded")).unwrap() {
+                if r.exclusion_reason.as_deref() == Some("BEWE divergent") {
+                    files.push(r.cells[0].1.clone());
+                }
+            }
+        }
+        fiches.retain(|f| files.contains(&f.file));
+        println!("Fiches à reprendre (BEWE divergent) : {}", fiches.len());
+    }
     s.author = format!("{} (fiches Pages)", s.setting("practitioner_name").unwrap().unwrap_or_default());
     let before = s.all_rows(false).unwrap();
-    let r = s.integrate_fiches(fiches).unwrap();
+    let r = s.integrate_fiches(keep_bewe, fiches).unwrap();
     let after = s.all_rows(false).unwrap();
     println!("Fiches : {}", r.fiches);
     println!("  consultations du tableau complétées (même consultation) : {}", r.enriched.len());

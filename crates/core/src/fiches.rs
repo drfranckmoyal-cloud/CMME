@@ -167,7 +167,9 @@ fn snapshot(conn: &Connection, eid: &str, author: &str, reason: &str) -> Result<
 }
 
 impl Store {
-    pub fn integrate_fiches(&mut self, mut fiches: Vec<Fiche>) -> Result<FicheReport> {
+    /// `keep_existing_bewe` : en cas de BEWE divergent, garder la valeur du dossier (décision du praticien)
+    /// et reprendre le reste de la fiche ; sinon, conflit signalé sans modification.
+    pub fn integrate_fiches(&mut self, keep_existing_bewe: bool, mut fiches: Vec<Fiche>) -> Result<FicheReport> {
         let payload = serde_json::to_vec(&fiches)?;
         let sha = hex::encode(Sha256::digest(&payload));
         if self.conn.query_row("SELECT count(*) FROM source_document WHERE sha256 = ?1", [&sha], |r| r.get::<_, i64>(0))? > 0 {
@@ -236,8 +238,11 @@ impl Store {
                 let same = encs.iter().find(|e| e.1.is_some() && e.1 == f.date).or_else(|| encs.iter().find(|e| e.1.is_none()));
                 if let Some((eid, _, hist, derived)) = same {
                     let known = derived.or(*hist);
+                    let mut divergent = None;
                     if let (Some(a), Some(b)) = (known, fb) {
-                        if a != b {
+                        if a != b && keep_existing_bewe {
+                            divergent = Some((a, b));
+                        } else if a != b {
                             tx.execute("UPDATE source_record SET status = 'excluded', exclusion_reason = 'BEWE divergent' WHERE id = ?1", [&rid])?;
                             rep.conflicts.push((f.file.clone(), code.clone(), format!("BEWE {b} dans la fiche, {a} dans le dossier : rien n'a été modifié")));
                             continue;
@@ -249,6 +254,12 @@ impl Store {
                         if let Some(b) = fb {
                             tx.execute("UPDATE encounter SET bewe_total_historical = ?1, bewe_legacy_raw = coalesce(bewe_legacy_raw, ?2) WHERE id = ?3", params![b, f.bewe_raw, eid])?;
                         }
+                    }
+                    if let Some((a, b)) = divergent {
+                        tx.execute(
+                            "INSERT INTO encounter_flag(encounter_id, flag, detail, status, resolution, created_at) VALUES (?1,'bewe_fiche_divergent',?2,'resolved',?3,?4)",
+                            params![eid, format!("BEWE {b} dans la fiche « {} », {a} dans le tableau", f.file), "Valeur du tableau conservée (décision du praticien)", now()],
+                        )?;
                     }
                     snapshot(&tx, eid, &author, &reason)?;
                     audit_on(&tx, &author, "fiche_pages_complement", "encounter", Some(eid), None, None, Some(&rid), Some(&reason))?;

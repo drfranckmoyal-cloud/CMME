@@ -46,7 +46,7 @@ export const numToInput = (n: number | null | undefined): string =>
 
 export const SERVICE_LABELS: Record<string, string> = {
   centre_expert: "Centre expert", sas: "SAS", hospit_complete: "Hospitalisation complète",
-  hospit_longue: "Hospitalisation longue durée", hdj: "HDJ", hdj_intensif: "HDJ intensif", autre: "Autre",
+  hdj: "HDJ", hdj_intensif: "HDJ intensif", autre: "Autre",
 };
 export const VOMITING_LABELS: Record<string, string> = {
   never_reported: "Jamais rapportés", past_only: "Anciens", current: "Actuels",

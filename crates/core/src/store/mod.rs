@@ -7,8 +7,8 @@ use crate::error::{CoreError, Result};
 use rusqlite::{params, Connection, OptionalExtension};
 use std::path::{Path, PathBuf};
 
-pub const SCHEMA_VERSION: i64 = 1;
-const MIGRATIONS: [&str; 1] = [include_str!("schema_v1.sql")];
+pub const SCHEMA_VERSION: i64 = 2;
+const MIGRATIONS: [&str; 2] = [include_str!("schema_v1.sql"), include_str!("schema_v2.sql")];
 
 pub struct Store {
     pub(crate) conn: Connection,

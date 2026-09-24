@@ -263,7 +263,7 @@ fn build() -> Catalog {
         // ---------- Contexte
         B::new("visit_date", "contexte", "contexte_main", "Date de consultation", "Visit date", Date).essential().missing(&["unknown"]).hint("JJ/MM/AAAA").done(),
         B::new("service_code", "contexte", "contexte_main", "Service", "Service", Choice)
-            .opts(&[("centre_expert", "Centre expert"), ("sas", "SAS"), ("hospit_complete", "Hospitalisation complète"), ("hospit_longue", "Hospitalisation longue durée"), ("hdj", "HDJ"), ("hdj_intensif", "HDJ intensif"), ("autre", "Autre")])
+            .opts(&[("centre_expert", "Centre expert"), ("sas", "SAS"), ("hospit_complete", "Hospitalisation complète"), ("hdj", "HDJ"), ("hdj_intensif", "HDJ intensif"), ("autre", "Autre")])
             .essential().missing(&["unknown"]).done(),
         B::new("age_years", "contexte", "contexte_main", "Âge", "Age (years)", Number).num(0.0, 110.0, true, Some("ans")).essential().missing(&["unknown", "declined"]).done(),
         B::new("sex_recorded", "contexte", "contexte_main", "Sexe / genre recueilli", "Recorded sex/gender", Choice)
