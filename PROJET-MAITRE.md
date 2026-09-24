@@ -77,6 +77,11 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 - 24/09/2026 — V1 construite : 27 tests automatiques + test trousseau passent ; parcours vérifiés à l'écran
   (démo : saisie, BEWE, prévention, terminer, import CSV synthétique, tableau, statistiques, thèmes). Build release
   .app/.dmg arm64. Poussé sur GitHub.
+- 24/09/2026 — Import du « Tableau recap consultations » dans l'espace clinique, à la demande et avec l'accord de
+  Franck (noms déclarés pseudonymisés). Export XLSX dans `~/CMME-donnees` (hors iCloud), copie chiffrée de la base
+  avant import au même endroit. Outil : `crates/core/examples/import_historique.rs` (règles conservatrices, décisions
+  justifiées, aucune fusion). Résultat : 251 consultations historiques ; 9 lignes exclues (5 sans nom, 4 sans donnée
+  clinique) ; 34 valeurs marquées indisponibles ; 2 groupes d'identités répétées laissés à l'arbitrage de Franck.
 - 24/09/2026 — App installée dans /Applications et ajoutée au Dock. Franck confirme que la version finale s'ouvre.
 
 ## Garde-fous
