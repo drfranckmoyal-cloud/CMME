@@ -17,24 +17,14 @@ export function fmtClinicalDate(iso: string | null | undefined): string {
   return y;
 }
 
-/** Saisie française JJ/MM/AAAA, MM/AAAA, AAAA (ou ISO) → ISO partiel. null si invalide. */
+/** Saisie au format européen JJ/MM/AAAA uniquement → ISO. null si invalide. */
 export function parseFrenchDate(s: string): string | null {
-  const t = s.trim();
-  if (!t) return null;
-  let m = t.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/);
-  if (m) {
-    const [, d, mo, y] = m;
-    const iso = `${y}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`;
-    const dt = new Date(`${iso}T12:00:00`);
-    return dt.getFullYear() === +y && dt.getMonth() + 1 === +mo && dt.getDate() === +d ? iso : null;
-  }
-  m = t.match(/^(\d{1,2})[/.-](\d{4})$/);
-  if (m) return +m[1] >= 1 && +m[1] <= 12 ? `${m[2]}-${m[1].padStart(2, "0")}` : null;
-  m = t.match(/^(\d{4})$/);
-  if (m) return t;
-  m = t.match(/^(\d{4})-(\d{2})(-(\d{2}))?$/);
-  if (m) return t;
-  return null;
+  const m = s.trim().match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})$/);
+  if (!m) return null;
+  const [, d, mo, y] = m;
+  const iso = `${y}-${mo.padStart(2, "0")}-${d.padStart(2, "0")}`;
+  const dt = new Date(`${iso}T12:00:00`);
+  return dt.getFullYear() === +y && dt.getMonth() + 1 === +mo && dt.getDate() === +d ? iso : null;
 }
 
 export const fmtTime = (iso: string | null | undefined): string =>

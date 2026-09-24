@@ -164,17 +164,15 @@ export default function App() {
 }
 
 function NewDossier({ clinical, onClose, onCreated }: { clinical: boolean; onClose: () => void; onCreated: (encounterId: string) => void }) {
-  const [code, setCode] = useState("");
   const [ln, setLn] = useState("");
   const [fn, setFn] = useState("");
-  const [ipp, setIpp] = useState("");
   const [err, setErr] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const create = async () => {
     setBusy(true); setErr(null);
     try {
-      const identity = clinical && (ln || fn || ipp) ? { last_name: ln || null, first_name: fn || null, hospital_id: ipp || null } : null;
-      const e = await call<EncounterFull>("create_dossier", { code: code.trim() || null, identity });
+      const identity = clinical && (ln.trim() || fn.trim()) ? { last_name: ln.trim() || null, first_name: fn.trim() || null, hospital_id: null } : null;
+      const e = await call<EncounterFull>("create_dossier", { code: null, identity });
       onCreated(e.meta.id);
     } catch (e) { setErr(errMessage(e)); } finally { setBusy(false); }
   };
@@ -183,15 +181,13 @@ function NewDossier({ clinical, onClose, onCreated }: { clinical: boolean; onClo
       <button type="button" className="btn" onClick={onClose}>Annuler</button>
       <button type="button" className="btn primary" disabled={busy} onClick={create}>Créer et commencer la consultation</button>
     </>}>
-      <p className="small muted">Le dossier démarre vierge : aucune réponse clinique n'est présélectionnée. Le code est stable et n'est jamais dérivé du nom.</p>
-      <div className="fields">
-        <div className="field wide"><div className="label"><span>Code du dossier (facultatif : attribué automatiquement)</span></div><input value={code} onChange={(e) => setCode(e.target.value)} placeholder="ex. C2026-012" /></div>
-        {clinical && (<>
-          <div className="field"><div className="label"><span>Nom (facultatif, espace clinique)</span></div><input value={ln} onChange={(e) => setLn(e.target.value)} /></div>
-          <div className="field"><div className="label"><span>Prénom (facultatif)</span></div><input value={fn} onChange={(e) => setFn(e.target.value)} /></div>
-          <div className="field wide"><div className="label"><span>Identifiant hospitalier (si autorisé)</span></div><input value={ipp} onChange={(e) => setIpp(e.target.value)} /></div>
-        </>)}
-      </div>
+      <p className="small muted">Le code du dossier est attribué automatiquement. La consultation démarre à la date du jour (modifiable), sans aucune réponse clinique présélectionnée.</p>
+      {clinical && (
+        <div className="fields">
+          <div className="field"><div className="label"><span>Nom</span></div><input value={ln} onChange={(e) => setLn(e.target.value)} autoFocus /></div>
+          <div className="field"><div className="label"><span>Prénom</span></div><input value={fn} onChange={(e) => setFn(e.target.value)} /></div>
+        </div>
+      )}
       {err && <div className="banner error" style={{ marginTop: 12 }}>{err}</div>}
     </Modal>
   );

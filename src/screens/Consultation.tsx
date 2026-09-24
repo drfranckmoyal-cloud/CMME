@@ -389,18 +389,16 @@ function short(v: string | null): string {
 function IdentityModal({ patientId, identity, onClose, onSaved }: { patientId: string; identity: Identity | null; onClose: () => void; onSaved: () => void }) {
   const [ln, setLn] = useState(identity?.last_name ?? "");
   const [fn, setFn] = useState(identity?.first_name ?? "");
-  const [ipp, setIpp] = useState(identity?.hospital_id ?? "");
   const [err, setErr] = useState<string | null>(null);
   return (
     <Modal title="Identité clinique (espace restreint)" onClose={onClose} actions={<>
       <button type="button" className="btn" onClick={onClose}>Annuler</button>
-      <button type="button" className="btn primary" onClick={async () => { try { await call("update_identity", { patientId, identity: { last_name: ln, first_name: fn, hospital_id: ipp } }); onSaved(); } catch (e) { setErr(errMessage(e)); } }}>Enregistrer</button>
+      <button type="button" className="btn primary" onClick={async () => { try { await call("update_identity", { patientId, identity: { last_name: ln, first_name: fn, hospital_id: identity?.hospital_id ?? null } }); onSaved(); } catch (e) { setErr(errMessage(e)); } }}>Enregistrer</button>
     </>}>
       <p className="small muted">Facultative, chiffrée, jamais exportée. Sert au rapprochement avec les anciens dossiers ; aucune fusion automatique sur le nom.</p>
       <div className="fields">
         <div className="field"><div className="label"><span>Nom</span></div><input value={ln} onChange={(e) => setLn(e.target.value)} /></div>
         <div className="field"><div className="label"><span>Prénom</span></div><input value={fn} onChange={(e) => setFn(e.target.value)} /></div>
-        <div className="field wide"><div className="label"><span>Identifiant hospitalier (si autorisé)</span></div><input value={ipp} onChange={(e) => setIpp(e.target.value)} /></div>
       </div>
       {err && <div className="banner error" style={{ marginTop: 12 }}>{err}</div>}
     </Modal>

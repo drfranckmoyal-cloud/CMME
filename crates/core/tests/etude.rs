@@ -119,7 +119,8 @@ fn neutralisation_des_formules_dans_les_csv() {
     let d = common::tmpdir();
     let (mut s, _) = common::store_in(&d);
     let e = s.create_dossier(Some("=CMD()".into()), None, false).unwrap();
-    let v = s.save_fields(&e.meta.id, e.meta.version, vec![fi("age_years", json!(30))]).unwrap().version;
+    // Date du jour proposée puis effacée : consultation sans date.
+    let v = s.save_fields(&e.meta.id, e.meta.version, vec![fi("age_years", json!(30)), FieldInput { field: "visit_date".into(), ..Default::default() }]).unwrap().version;
     s.validate_encounter(&e.meta.id, v).unwrap();
     let p = s.create_project(ProjectInput { name: "Projet".into(), period_start: Some("2020-01-01".into()), period_end: None, include_legacy: true, include_prospective: true, exclude_open_anomalies: true, plan_version: None }).unwrap();
     let sel = s.selection(&p.id).unwrap();

@@ -261,12 +261,10 @@ fn build() -> Catalog {
     let cur_past = &["current", "past_only"];
     let fields = vec![
         // ---------- Contexte
-        B::new("visit_date", "contexte", "contexte_main", "Date de consultation", "Visit date", Date).essential().missing(&["unknown"]).hint("JJ/MM/AAAA, MM/AAAA ou AAAA").done(),
+        B::new("visit_date", "contexte", "contexte_main", "Date de consultation", "Visit date", Date).essential().missing(&["unknown"]).hint("JJ/MM/AAAA").done(),
         B::new("service_code", "contexte", "contexte_main", "Service", "Service", Choice)
             .opts(&[("centre_expert", "Centre expert"), ("sas", "SAS"), ("hospit_complete", "Hospitalisation complète"), ("hospit_longue", "Hospitalisation longue durée"), ("hdj", "HDJ"), ("hdj_intensif", "HDJ intensif"), ("autre", "Autre")])
             .essential().missing(&["unknown"]).done(),
-        B::new("visit_type", "contexte", "contexte_main", "Type de visite", "Visit type", Choice)
-            .opts(&[("initial", "Première consultation"), ("follow_up", "Suivi"), ("undetermined", "Non déterminé")]).missing(&[]).done(),
         B::new("age_years", "contexte", "contexte_main", "Âge", "Age (years)", Number).num(0.0, 110.0, true, Some("ans")).essential().missing(&["unknown", "declined"]).done(),
         B::new("sex_recorded", "contexte", "contexte_main", "Sexe / genre recueilli", "Recorded sex/gender", Choice)
             .opts(&[("female", "Femme"), ("male", "Homme"), ("other", "Autre / non binaire")]).done(),
@@ -274,10 +272,9 @@ fn build() -> Catalog {
             .opts(&[("studies", "Études"), ("employed", "Emploi"), ("unemployed", "Sans emploi"), ("retired", "Retraite"), ("other", "Autre")]).done(),
         B::new("occupation_text", "contexte", "contexte_main", "Profession / statut (précision)", "Occupation (free text)", Text).hint("Non exporté").done(),
         B::new("ed_diagnosis", "contexte", "contexte_main", "Diagnostic TCA documenté", "Documented eating disorder diagnosis", Choice)
-            .opts(&[("AN", "Anorexie mentale"), ("BN", "Boulimie"), ("BED", "Hyperphagie boulimique"), ("ARFID", "ARFID"), ("OSFED", "OSFED"), ("UFED", "UFED"), ("other", "Autre"), ("unspecified", "Non précisé")])
+            .opts(&[("AN", "Anorexie mentale"), ("BN", "Boulimie"), ("BED", "Hyperphagie boulimique"), ("ARFID", "ARFID"), ("OSFED", "OSFED"), ("UFED", "UFED"), ("rumination", "Mérycisme"), ("other", "Autre"), ("unspecified", "Non précisé")])
             .essential().missing(&["unknown"]).done(),
-        B::new("ed_diagnosis_source", "contexte", "contexte_main", "Source du diagnostic", "Diagnosis source", Choice)
-            .opts(&[("record", "Dossier"), ("clinician", "Clinicien"), ("patient", "Patient"), ("unconfirmed", "Non confirmé")]).missing(REC).done(),
+        B::new("ed_comment", "contexte", "contexte_main", "Commentaire sur le diagnostic TCA", "Eating disorder diagnosis comment", Text).wide().done(),
         B::new("ed_duration_months", "contexte", "contexte_main", "Ancienneté du TCA", "Eating disorder duration", Number).num(0.0, 900.0, false, Some("mois")).range().done(),
         B::new("ed_current_course", "contexte", "contexte_main", "Évolution actuelle", "Current course", Choice)
             .opts(&[("active", "Actif"), ("remission_reported", "Rémission rapportée"), ("other", "Autre")]).done(),
@@ -296,12 +293,10 @@ fn build() -> Catalog {
         B::new("bristle_hardness", "habitudes", "habitudes_main", "Dureté des poils", "Bristle hardness", Choice).opts(&[("soft", "Souple"), ("medium", "Médium"), ("hard", "Dure")]).done(),
         B::new("toothpaste_name", "habitudes", "habitudes_main", "Dentifrice", "Toothpaste name", Text).hint("Nom, fluor si connu").done(),
         B::new("last_dental_visit_months", "habitudes", "habitudes_main", "Dernière visite chez le dentiste", "Last dental visit (months ago)", Number).num(0.0, 600.0, false, Some("mois")).range().hint("Il y a combien de mois").done(),
-        B::new("usual_dentist", "habitudes", "habitudes_main", "Dentiste habituel", "Usual dentist", Choice).opts(YES_NO).done(),
+        B::new("usual_dentist", "habitudes", "habitudes_main", "Dentiste traitant", "Regular dentist", Choice).opts(YES_NO).done(),
         B::new("dry_mouth_reported", "habitudes", "habitudes_main", "Bouche sèche déclarée", "Reported dry mouth", Choice).opts(YES_NO).done(),
         B::new("hypersensitivity", "habitudes", "habitudes_main", "Sensibilité dentaire", "Dentine hypersensitivity (reported)", Choice).opts(YES_NO).done(),
         B::new("hypersensitivity_intensity", "habitudes", "habitudes_main", "Intensité de la sensibilité", "Hypersensitivity intensity", Number).num(0.0, 10.0, true, Some("/ 10")).show_if("hypersensitivity", &["yes"]).done(),
-        B::new("dental_pain", "habitudes", "habitudes_main", "Douleur dentaire (7 derniers jours)", "Dental pain (7 days)", Choice).opts(YES_NO).done(),
-        B::new("dental_pain_intensity", "habitudes", "habitudes_main", "Intensité de la douleur", "Pain intensity", Number).num(0.0, 10.0, true, Some("/ 10")).show_if("dental_pain", &["yes"]).done(),
         B::new("awake_bruxism_reported", "habitudes", "habitudes_main", "Serrement / grincement diurne déclaré", "Awake bruxism (reported)", Choice).opts(YES_NO).done(),
         B::new("sleep_bruxism_reported", "habitudes", "habitudes_main", "Bruxisme du sommeil déclaré", "Sleep bruxism (reported)", Choice).opts(YES_NO).done(),
         B::new("post_vomit_rinse", "habitudes", "habitudes_details", "Rinçage après vomissement", "Rinse after vomiting", Choice).opts(YES_NO).done(),

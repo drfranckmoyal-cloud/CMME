@@ -41,7 +41,6 @@ pub fn seed_demo(store: &mut Store) -> Result<usize> {
         let mut inputs = vec![
             FieldInput { field: "visit_date".into(), value: Some(json!(date.format("%Y-%m-%d").to_string())), ..Default::default() },
             FieldInput { field: "service_code".into(), value: Some(json!(c.service)), ..Default::default() },
-            FieldInput { field: "visit_type".into(), value: Some(json!("initial")), ..Default::default() },
             FieldInput { field: "age_years".into(), value: Some(json!(c.age)), ..Default::default() },
             FieldInput { field: "panoramic_review_status".into(), value: Some(json!("reviewed")), ..Default::default() },
             FieldInput { field: "intraoral_exam_status".into(), value: Some(json!("done")), ..Default::default() },

@@ -18,7 +18,9 @@ fn dossier_vierge_sans_reponse_inventee() {
     let d = common::tmpdir();
     let (mut s, _) = common::store_in(&d);
     let e = s.create_dossier(None, None, false).unwrap();
-    assert!(e.values.is_empty(), "aucune valeur clinique initiale");
+    assert_eq!(e.values.len(), 1, "seule la date du jour est proposée");
+    assert_eq!(e.values[0].field, "visit_date");
+    assert_eq!(e.values[0].value_text.as_deref(), Some(chrono::Local::now().format("%Y-%m-%d").to_string().as_str()));
     assert!(e.bewe.is_empty() && e.exposures.is_empty() && e.prevention.is_empty());
     assert_eq!(e.meta.status, "draft");
     assert_eq!(e.meta.collection_mode, "structured_prospective");
@@ -35,7 +37,7 @@ fn saisie_partielle_fermee_puis_rouverte_a_l_identique() {
     v = s.save_fields(&id, v, vec![
         fi("age_years", json!(26)),
         fi("brushing_daily", json!({"min": "2", "max": "3"})),
-        fi("dental_pain", json!("no")),
+        fi("usual_dentist", json!("no")),
         missing("sex_recorded", "declined"),
         fi("hypersensitivity_intensity", json!(0)),
         fi("toothpaste_features", json!(["whitening", "charcoal"])),
@@ -53,13 +55,13 @@ fn saisie_partielle_fermee_puis_rouverte_a_l_identique() {
     assert_eq!(get("age_years").value_num, Some(26.0));
     let b = get("brushing_daily");
     assert_eq!((b.value_num, b.value_num_max, b.precision.as_deref()), (Some(2.0), Some(3.0), Some("range")), "plage conservée, pas 2,5");
-    assert_eq!(get("dental_pain").value_text.as_deref(), Some("no"));
+    assert_eq!(get("usual_dentist").value_text.as_deref(), Some("no"));
     assert_eq!(get("sex_recorded").missing_reason.as_deref(), Some("declined"));
     assert_eq!(get("hypersensitivity_intensity").value_num, Some(0.0), "un zéro explicite reste zéro");
     assert_eq!(get("toothpaste_features").value_text.as_deref(), Some("[\"charcoal\",\"whitening\"]"));
     assert_eq!(get("consultation_observations").value_text.as_deref(), Some("  Texte libre\nsur deux lignes — avec accents éàü  "), "texte intact");
     assert_eq!(get("visit_date").date_precision.as_deref(), Some("month"), "aucun jour inventé");
-    assert!(r.values.iter().all(|x| x.field != "dental_pain_intensity"), "jamais renseigné = absent");
+    assert!(r.values.iter().all(|x| x.field != "dry_mouth_reported"), "jamais renseigné = absent");
     assert_eq!(r.bewe.len(), 1);
     assert_eq!(r.bewe[0].score, Some(0));
     assert!(r.meta.bewe_total_derived.is_none(), "1/6 sextant : pas de total");
@@ -77,7 +79,7 @@ fn a_puis_b_puis_a_sans_melange() {
     s.save_fields(&a.meta.id, a.meta.version, vec![fi("age_years", json!(30)), fi("toothpaste_features", json!(["charcoal"]))]).unwrap();
     s.save_fields(&b.meta.id, b.meta.version, vec![fi("age_years", json!(41)), fi("exam_note", json!("note B"))]).unwrap();
     let a2 = s.load_encounter(&a.meta.id, false).unwrap();
-    assert_eq!(a2.values.len(), 2);
+    assert_eq!(a2.values.len(), 3);
     assert!(a2.values.iter().all(|v| v.field != "exam_note"));
     assert_eq!(a2.values.iter().find(|v| v.field == "age_years").unwrap().value_num, Some(30.0));
 }
@@ -105,7 +107,7 @@ fn validations_refusees_sans_rien_ecrire() {
         assert!(s.set_sextant(&id, v, SextantInput { sextant: "upper_left".into(), score: Some(bad_score), missing_reason: None, unassessable_reason: None }).is_err());
     }
     let r = s.load_encounter(&id, false).unwrap();
-    assert!(r.values.is_empty() && r.bewe.is_empty(), "aucune écriture partielle");
+    assert!(r.values.len() == 1 && r.bewe.is_empty(), "aucune écriture partielle");
     assert_eq!(r.meta.version, v);
 }
 
@@ -267,7 +269,7 @@ fn ancien_vomissement_arrete_et_absence_actuelle_coexistent() {
     let e = s.create_dossier(None, None, false).unwrap();
     s.save_fields(&e.meta.id, e.meta.version, vec![fi("vomiting_lifetime", json!("past_only")), fi("vomiting_stop_months", json!(24)), fi("compensatory_behaviors", json!(["vomiting"]))]).unwrap();
     let r = s.load_encounter(&e.meta.id, false).unwrap();
-    assert_eq!(r.values.len(), 3);
+    assert_eq!(r.values.len(), 4);
 }
 
 #[test]
@@ -284,7 +286,7 @@ fn erreur_disque_sans_faux_succes() {
     drop(s);
     std::fs::set_permissions(&path, std::fs::Permissions::from_mode(0o644)).unwrap();
     let mut s = Store::open(&path, &common::KEY, false, "t").unwrap();
-    assert!(s.load_encounter(&e.meta.id, false).unwrap().values.is_empty(), "rien d'écrit pendant l'échec");
+    assert!(s.load_encounter(&e.meta.id, false).unwrap().values.iter().all(|v| v.field != "age_years"), "rien d'écrit pendant l'échec");
     let r = s.save_fields(&e.meta.id, e.meta.version, vec![fi("age_years", json!(30))]);
     assert!(r.is_ok(), "réessayer (connexion rouverte) fonctionne une fois le disque disponible");
 }

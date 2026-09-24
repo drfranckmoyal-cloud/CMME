@@ -106,10 +106,10 @@ function DateField({ field, value, onChange, onBlur, readOnly }: Props) {
           setText(e.target.value);
           if (!e.target.value.trim()) { setError(null); onChange({ field: field.code, value: null }); return; }
           const iso = parseFrenchDate(e.target.value);
-          if (iso) { setError(null); onChange({ field: field.code, value: iso }); } else setError("Date incomplète ou invalide : non enregistrée");
+          if (iso) { setError(null); onChange({ field: field.code, value: iso }); } else setError("Date attendue au format JJ/MM/AAAA : non enregistrée");
         }}
         onBlur={() => { focused.current = false; onBlur?.(); }} />
-      {error && text.length >= 4 && <span className="err-note" role="alert">{error}</span>}
+      {error && text.length >= 8 && <span className="err-note" role="alert">{error}</span>}
     </>
   );
 }

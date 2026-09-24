@@ -434,6 +434,7 @@ impl Store {
             write_identity(&tx, &pid, &idn)?;
         }
         let eid = insert_encounter(&tx, &pid, "structured_prospective", &author)?;
+        propose_today(&tx, &eid, &author)?;
         audit_on(&tx, &author, "create", "patient", Some(&pid), None, None, Some(&code), None)?;
         tx.commit()?;
         self.load_encounter(&eid, true)
@@ -447,6 +448,7 @@ impl Store {
             return Err(CoreError::NotFound("dossier".into()));
         }
         let eid = insert_encounter(&tx, patient_id, "structured_prospective", &author)?;
+        propose_today(&tx, &eid, &author)?;
         tx.commit()?;
         self.load_encounter(&eid, true)
     }
@@ -944,7 +946,7 @@ impl Store {
     /// Supprime un brouillon jamais validé et sans aucune donnée (création par erreur).
     pub fn discard_empty_draft(&mut self, encounter_id: &str) -> Result<()> {
         let full = self.load_encounter(encounter_id, false)?;
-        if full.meta.status != "draft" || !full.values.is_empty() || !full.bewe.is_empty() || !full.exposures.is_empty() || !full.prevention.is_empty() || full.meta.revision > 0 {
+        if full.meta.status != "draft" || full.values.iter().any(|v| v.field != "visit_date") || !full.bewe.is_empty() || !full.exposures.is_empty() || !full.prevention.is_empty() || full.meta.revision > 0 {
             return Err(CoreError::Refused("seul un brouillon entièrement vide peut être abandonné".into()));
         }
         let tx = self.conn.transaction()?;
@@ -971,6 +973,13 @@ pub(crate) fn write_identity(tx: &Connection, patient_id: &str, idn: &IdentityIn
         params![patient_id, ln, fnm, (!full.is_empty()).then_some(full), text_or_none(&idn.hospital_id), key],
     )?;
     Ok(())
+}
+
+/// Date du jour proposée pour une nouvelle consultation (métadonnée de saisie, modifiable).
+fn propose_today(tx: &Connection, encounter_id: &str, author: &str) -> Result<()> {
+    let today = super::today().format("%Y-%m-%d").to_string();
+    write_value(tx, encounter_id, author, &StoredValue { field: "visit_date".into(), value_text: Some(today), date_precision: Some("day".into()), ..Default::default() }, None)?;
+    sync_denormalized(tx, encounter_id)
 }
 
 pub(crate) fn insert_encounter(tx: &Connection, patient_id: &str, mode: &str, author: &str) -> Result<String> {
