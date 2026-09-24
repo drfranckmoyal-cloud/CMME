@@ -118,6 +118,7 @@ struct Status {
     data_dir: String,
     keychain: &'static str,
     macos_version: Option<String>,
+    password_required: bool,
 }
 
 #[tauri::command]
@@ -136,6 +137,34 @@ fn app_status(state: State<AppState>) -> R<Status> {
         data_dir: state.data_dir.to_string_lossy().into(),
         keychain: if cfg!(debug_assertions) { "fichier de développement (données fictives uniquement)" } else { "trousseau macOS" },
         macos_version: macos,
+        password_required: clinique_password_required(&state, g.as_ref()),
+    })
+}
+
+/// Lit le réglage dans la base clinique (ouverte brièvement avec la clé du trousseau si l'app est verrouillée).
+fn clinique_password_required(state: &AppState, open: Option<&Store>) -> bool {
+    if state.profile.lock().map(|p| p.as_deref() == Some("clinique")).unwrap_or(false) {
+        if let Some(s) = open {
+            return s.password_required().unwrap_or(true);
+        }
+    }
+    let path = state.db_path("clinique");
+    if !path.exists() {
+        return true;
+    }
+    match state.keys.get(&AppState::account("clinique")) {
+        Ok(Some(k)) => Store::open(&path, &k, false, "lecture").and_then(|s| s.password_required()).unwrap_or(true),
+        _ => true,
+    }
+}
+
+#[tauri::command]
+fn set_password_required(state: State<AppState>, required: bool, password: String) -> R<()> {
+    state.with(|s| {
+        if !required && !s.verify_app_password(&password)? {
+            return Err(CoreError::BadSecret);
+        }
+        s.set_password_required(required)
     })
 }
 
@@ -186,7 +215,7 @@ fn unlock(state: State<AppState>, profile: String, password: Option<String>) -> 
         let key = state.keys.get(&account).map_err(err)?.ok_or_else(|| err(CoreError::Keychain("clé absente : restaurez une sauvegarde avec votre phrase de récupération".into())))?;
         let author = "Praticien";
         let mut s = Store::open(&path, &key, false, author).map_err(err)?;
-        let ok = s.verify_app_password(password.as_deref().unwrap_or("")).map_err(err)?;
+        let ok = !s.password_required().map_err(err)? || s.verify_app_password(password.as_deref().unwrap_or("")).map_err(err)?;
         if !ok {
             std::thread::sleep(std::time::Duration::from_millis(800));
             return Err(err(CoreError::BadSecret));
@@ -542,7 +571,7 @@ pub fn run() {
             Ok(())
         })
         .invoke_handler(tauri::generate_handler![
-            app_status, setup_clinique, unlock, lock, reconnect, change_password, verify_password, get_catalog,
+            app_status, set_password_required, setup_clinique, unlock, lock, reconnect, change_password, verify_password, get_catalog,
             create_dossier, new_encounter, load_encounter, update_identity, save_fields, set_sextant, set_exposure_group, update_exposure,
             apply_protocol, update_prevention_action, confirm_prevention, recap, validate_encounter, start_amendment, history, discard_empty_draft,
             list_encounters, patient_encounters, stats, home_summary,

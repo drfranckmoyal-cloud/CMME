@@ -70,7 +70,7 @@ export interface Filter {
 export interface Status {
   app_version: string; unlocked: boolean; profile: string | null; clinique_exists: boolean; demo_exists: boolean;
   practitioner: string | null; cipher_version: string | null; last_backup_at: string | null; data_dir: string;
-  keychain: string; macos_version: string | null;
+  keychain: string; macos_version: string | null; password_required: boolean;
 }
 export interface Proportion { k: number; n: number; pct: number | null; ci_low: number | null; ci_high: number | null }
 export interface Distribution { n: number; median: number | null; q1: number | null; q3: number | null; min: number | null; max: number | null; mean: number | null; sd: number | null }

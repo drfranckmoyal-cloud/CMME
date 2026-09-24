@@ -88,7 +88,7 @@ export default function App() {
 
   // Verrouillage après inactivité et au retour de veille (saut d'horloge).
   useEffect(() => {
-    if (!status?.unlocked) return;
+    if (!status?.unlocked || (status.profile === "clinique" && !status.password_required)) return;
     let last = Date.now();
     let tick = Date.now();
     const bump = () => { last = Date.now(); };
@@ -101,7 +101,7 @@ export default function App() {
       if (slept || now - last > prefs.lockMinutes * 60_000) void lock();
     }, 15_000);
     return () => { window.clearInterval(t); evs.forEach((e) => window.removeEventListener(e, bump)); };
-  }, [status?.unlocked, prefs.lockMinutes, lock]);
+  }, [status?.unlocked, status?.profile, status?.password_required, prefs.lockMinutes, lock]);
 
   // Fermeture de la fenêtre : enregistrer d'abord.
   useEffect(() => {

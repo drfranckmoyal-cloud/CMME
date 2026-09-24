@@ -101,6 +101,14 @@ export function Settings({ status, prefs, setPrefs, onLocked, refreshStatus }: {
             </select></div>
           <p className="small muted" style={{ marginTop: 6 }}>Verrouillage aussi à la sortie de veille. La saisie en cours est enregistrée avant verrouillage.</p>
           {!demo && (
+            <div className="field" style={{ marginTop: 14 }}>
+              <label className="check"><input type="checkbox" checked={status.password_required} disabled={busy || (status.password_required && !cur)}
+                onChange={(e) => go(async () => { await call("set_password_required", { required: e.target.checked, password: cur }); refreshStatus(); setMsg({ kind: "ok", text: e.target.checked ? "Le mot de passe sera demandé à l'ouverture." : "Le mot de passe ne sera plus demandé. La base reste chiffrée ; toute personne ayant accès à votre session macOS peut ouvrir CMME." }); })} />
+                Demander le mot de passe à l'ouverture</label>
+              <p className="small muted">{status.password_required ? "Pour le désactiver, saisissez d'abord le mot de passe actuel ci-dessous." : "Désactivé : ouverture directe, sans verrouillage automatique. La base reste chiffrée sur le disque."}</p>
+            </div>
+          )}
+          {!demo && (
             <div className="fields">
               <div className="field"><div className="label"><span>Mot de passe actuel</span></div><input type="password" value={cur} onChange={(e) => setCur(e.target.value)} /></div>
               <div className="field"><div className="label"><span>Nouveau mot de passe</span></div><input type="password" value={npw} onChange={(e) => setNpw(e.target.value)} /></div>

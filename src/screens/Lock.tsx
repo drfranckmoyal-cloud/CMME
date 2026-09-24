@@ -1,5 +1,5 @@
 // Premier lancement, déverrouillage, restauration sur un nouveau Mac.
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { open } from "@tauri-apps/plugin-dialog";
 import { call, errMessage } from "../api";
 import type { Status } from "../types";
@@ -14,6 +14,11 @@ export function LockScreen({ status, onUnlocked }: { status: Status; onUnlocked:
   const [info, setInfo] = useState<string | null>(null);
   const [file, setFile] = useState<string | null>(null);
   const [phrase, setPhrase] = useState("");
+
+  // Mot de passe désactivé par le praticien : ouverture directe de l'espace clinique.
+  useEffect(() => {
+    if (status.clinique_exists && !status.password_required) void call("unlock", { profile: "clinique" }).then(onUnlocked).catch((e) => setErr(errMessage(e)));
+  }, [status.clinique_exists, status.password_required, onUnlocked]);
 
   const go = async (fn: () => Promise<void>) => {
     setBusy(true); setErr(null);

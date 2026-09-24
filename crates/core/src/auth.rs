@@ -30,6 +30,21 @@ impl Store {
         Ok(())
     }
 
+    /// Mot de passe demandé à l'ouverture (oui par défaut). Désactivable à la demande du praticien ;
+    /// la base reste chiffrée par la clé du trousseau.
+    pub fn password_required(&self) -> Result<bool> {
+        Ok(self.setting("password_required")?.as_deref() != Some("0"))
+    }
+
+    pub fn set_password_required(&self, required: bool) -> Result<()> {
+        if required && !self.has_app_password()? {
+            return Err(CoreError::Refused("définissez d'abord un mot de passe".into()));
+        }
+        self.set_setting("password_required", if required { "1" } else { "0" })?;
+        self.audit("password_required", "app", None, None, None, Some(if required { "1" } else { "0" }), None)?;
+        Ok(())
+    }
+
     pub fn verify_app_password(&self, pw: &str) -> Result<bool> {
         let Some(h) = self.setting("app_password")? else { return Ok(false) };
         let parsed = PasswordHash::new(&h).map_err(|e| CoreError::Storage(e.to_string()))?;
