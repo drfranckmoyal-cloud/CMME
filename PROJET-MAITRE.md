@@ -70,6 +70,10 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
   ajoutée au formulaire ; l'ancien « oui/non » suit cette définition). Consultation dentaire commencée en décembre 2024,
   systématique au Centre expert depuis septembre 2025 ; aucun mineur. Protocole v0.2 : `docs/PROTOCOLE_ETUDE.html`.
 
+- D14 (25/09) Date 02/01/2024 corrigée en 02/01/2025 (amendement motivé). H-0146 et H-0251 : deux personnes
+  distinctes (résultats différents), décision de Franck ; règle générale retenue : même nom mais résultats différents
+  = dossiers distincts.
+
 ## Questions ouvertes
 
 | Question | Qui tranche |
@@ -79,8 +83,6 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 | Destination autorisée des sauvegardes | Franck / DSI Sainte-Anne |
 | Cadre institutionnel (DPO, MR-004) pour l'usage réel | Franck / établissement |
 | Signature/notarisation Apple (compte développeur) si diffusion | Franck |
-| H-0146 et H-0251 : même personne ? | Franck |
-| Fiche datée 02/01/2024 rangée dans « CS 02:01:25 » : corriger en 02/01/2025 ? | Franck |
 | Cadre réglementaire (MR-004), co-auteurs, financement : reportés | Franck |
 
 ## Journal
