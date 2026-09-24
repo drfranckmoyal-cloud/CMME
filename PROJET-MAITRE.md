@@ -60,6 +60,11 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 - D11 (24/09) Export : liste blanche, année de consultation par défaut (dates exactes sur option), identifiants d'étude
   aléatoires par projet, instantané figé stocké dans la base chiffrée.
 
+- D12 (24/09) Modalités de l'étude arrêtées par Franck : question descriptive (fréquence et sévérité BEWE chez les
+  patients TCA dépistés) + analyse secondaire selon les vomissements ; période sans limite ; ancien + nouveau recueil
+  tant que le travail continue ; population adulte (la consultation n'accueille que des adultes) ; visite index =
+  première consultation. Publication visée en anglais, revue internationale (rêve : Nature ; voir bilan des revues).
+
 ## Questions ouvertes
 
 | Question | Qui tranche |
@@ -70,7 +75,6 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 | Cadre institutionnel (DPO, MR-004) pour l'usage réel | Franck / établissement |
 | Signature/notarisation Apple (compte développeur) si diffusion | Franck |
 | H-0146 et H-0251 : même personne ? | Franck |
-| Modalités de l'étude (question, population, période, critères) | Franck, avec Claude |
 
 ## Journal
 
