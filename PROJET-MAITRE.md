@@ -14,11 +14,13 @@ Spécifications de départ : `specs/` (copie intacte du dossier de transmission 
 | Lot | Contenu | État |
 |---|---|---|
 | 0 | Environnement, preuve SQLCipher | Fait (24/09/2026) |
-| 1–3 | Consultation page unique, BEWE, prévention, sauvegarde, amendements | En cours |
-| 4 | Import XLSX/CSV, revue des anomalies, doublons | À faire |
-| 5 | Tableau filtrable, statistiques, export pseudonymisé figé | À faire |
-| 6 | Sauvegarde/restauration chiffrée, verrouillage, build macOS | À faire |
-| 7 | Guides, recette, livraison | À faire |
+| 1–3 | Consultation page unique, BEWE, prévention, sauvegarde, amendements | Fait, vérifié à l'écran |
+| 4 | Import XLSX/CSV, revue des anomalies, doublons | Fait (fichiers synthétiques) |
+| 5 | Tableau filtrable, statistiques, export pseudonymisé figé | Fait |
+| 6 | Sauvegarde/restauration chiffrée, verrouillage, build macOS | Fait ; .app + .dmg arm64 non signés |
+| 7 | Guides, recette, livraison | Fait ; pilote réel et validation institutionnelle à venir |
+
+Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. Guide : `docs/GUIDE_UTILISATEUR.md`.
 
 ## Verrous (décisions de Franck, non renégociables)
 
@@ -43,6 +45,21 @@ Spécifications de départ : `specs/` (copie intacte du dossier de transmission 
 - D4 (24/09) Le dossier `target/` (compilation) et `node_modules/` sont exclus d'iCloud
   (`xattr com.apple.fileprovider.ignore#P`), comme pour GEO.
 
+- D5 (24/09) Cœur métier entièrement en Rust (validation à la frontière native) ; l'interface n'écrit jamais de SQL.
+  Catalogue des champs unique (`crates/core/src/domain/catalog.rs`) pour écran, validation et export.
+- D6 (24/09) Valeurs cliniques dans une table `field_value` typée (valeur XOR raison de manque, contrainte en base),
+  tables dédiées pour sextants BEWE, expositions et mesures de prévention. Absence de ligne = « non renseigné »
+  (prospectif) ou « non consigné » (historique).
+- D7 (24/09) Clé de base aléatoire dans le trousseau macOS + mot de passe applicatif (Argon2id). En développement
+  seulement, clé dans un fichier local (évite les demandes du trousseau à chaque recompilation ; données fictives).
+- D8 (24/09) Sauvegarde = base SQLCipher autonome chiffrée par une phrase de récupération (restaurable sans le trousseau
+  d'origine), vérifiée avant renommage atomique. Destinations iCloud (Bureau, Documents) refusées.
+- D9 (24/09) « Vomissements » prospectif = jamais rapportés / anciens uniquement / actuels (+ détails). L'ancien oui/non
+  reste un champ distinct à temporalité inconnue.
+- D10 (24/09) Consultation historique importée = validée (révision 1) après revue ; correction par amendement.
+- D11 (24/09) Export : liste blanche, année de consultation par défaut (dates exactes sur option), identifiants d'étude
+  aléatoires par projet, instantané figé stocké dans la base chiffrée.
+
 ## Questions ouvertes
 
 | Question | Qui tranche |
@@ -51,11 +68,16 @@ Spécifications de départ : `specs/` (copie intacte du dossier de transmission 
 | Fenêtres de référence (28 j vomissements, 7 j habitudes) | Franck / équipe TCA |
 | Destination autorisée des sauvegardes | Franck / DSI Sainte-Anne |
 | Cadre institutionnel (DPO, MR-004) pour l'usage réel | Franck / établissement |
+| Confirmer d'un clic l'ouverture de la version finale (trousseau réel) | Franck |
+| Signature/notarisation Apple (compte développeur) si diffusion | Franck |
 
 ## Journal
 
 - 24/09/2026 — Lecture complète du dossier de transmission. Inspection du Mac. Installation de Rust.
   Preuve SQLCipher : fichier illisible sans clé (test automatique). Création du dépôt.
+- 24/09/2026 — V1 construite : 27 tests automatiques + test trousseau passent ; parcours vérifiés à l'écran
+  (démo : saisie, BEWE, prévention, terminer, import CSV synthétique, tableau, statistiques, thèmes). Build release
+  .app/.dmg arm64. Poussé sur GitHub.
 
 ## Garde-fous
 
