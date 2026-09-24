@@ -1,0 +1,728 @@
+{
+  "version": "1.0",
+  "language": "fr",
+  "kind": "design_catalog_not_validation_schema",
+  "note": "Expressions originales : certaines lignes décrivent plusieurs variables ou tables. Contrats normatifs dans docs/02_CONTRATS_DE_DONNEES.md.",
+  "entries": [
+    {
+      "expression": "panoramic_review_status",
+      "type_or_values": "Consultée/non disponible/non consultée ; aucun défaut",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "panoramic_date",
+      "type_or_values": "Date du cliché si connue ; distincte de la consultation",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "panoramic_source",
+      "type_or_values": "Dossier existant/réalisée dans le parcours/autre/inconnu",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "panoramic_interpretability",
+      "type_or_values": "Exploitable/partiellement exploitable/non exploitable/non évalué",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "panoramic_findings",
+      "type_or_values": "Aucun constat particulier renseigné/carie suspectée/lésion périapicale suspectée/perte osseuse/autre/non évalué ; plusieurs constats possibles",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "panoramic_note",
+      "type_or_values": "Texte court, dent/localisation si utile ; constat radiographique séparé du diagnostic clinique",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "intraoral_exam_status",
+      "type_or_values": "Réalisé/partiel/non réalisé ; aucune présélection",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "finding_source",
+      "type_or_values": "Endobuccal/panoramique/les deux/autre, pour chaque constat utile",
+      "rule": "",
+      "section": "Indicateurs radiographiques à enregistrer"
+    },
+    {
+      "expression": "patient_id",
+      "type_or_values": "UUID local",
+      "rule": "Stable ; jamais dérivé du nom",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "study_id",
+      "type_or_values": "Code aléatoire par projet",
+      "rule": "Table de correspondance séparée de l'export",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "clinical_identity",
+      "type_or_values": "Nom/prénom et identifiant hospitalier si autorisé",
+      "rule": "Espace clinique restreint ; hors extraction recherche",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "birth_date",
+      "type_or_values": "Date facultative",
+      "rule": "Seulement si nécessaire au dossier ; hors export standard",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "age_years",
+      "type_or_values": "Nombre",
+      "rule": "Âge à la consultation ; origine calculée ou documentée",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "age_band_legacy",
+      "type_or_values": "Texte source + bornes si interprétables",
+      "rule": "Pas de conversion arbitraire en âge exact",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "sex_recorded",
+      "type_or_values": "Catégorie selon source + inconnu",
+      "rule": "Ne pas déduire d'un prénom ; identité de genre séparée si utile et justifiée",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "occupation_text",
+      "type_or_values": "Texte court facultatif",
+      "rule": "Pour le soin ; éviter le texte précis dans les exports",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "occupational_status",
+      "type_or_values": "Études/emploi/sans emploi/retraite/autre/inconnu",
+      "rule": "Recodage pour analyse ; nomenclature à valider",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "visit_id",
+      "type_or_values": "UUID",
+      "rule": "Une observation clinique datée",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "visit_date",
+      "type_or_values": "Date + précision",
+      "rule": "Pas de date inventée à l'import",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "visit_type",
+      "type_or_values": "Initiale/suivi/non déterminé",
+      "rule": "Initiale clinique distincte de visite index d'une étude",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "service_code",
+      "type_or_values": "Centre expert/SAS/hospitalisation complète/longue durée/HDJ/HDJ intensif/autre",
+      "rule": "Référentiel local à confirmer, garder libellé source",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "examiner_id",
+      "type_or_values": "Référence praticien",
+      "rule": "Nécessaire à la traçabilité des scores",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "collection_mode",
+      "type_or_values": "Historique rétrospectif/structuré prospectif",
+      "rule": "Non modifiable silencieusement",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "form_version",
+      "type_or_values": "Chaîne",
+      "rule": "Version du formulaire effectivement utilisé",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "visit_status",
+      "type_or_values": "Brouillon/validé/amendé",
+      "rule": "Une correction après validation crée une version",
+      "section": "6.1 Patient, consultation et contexte"
+    },
+    {
+      "expression": "ed_diagnosis",
+      "type_or_values": "AN/BN/BED/ARFID/OSFED/UFED/autre/non précisé",
+      "rule": "Reprendre le diagnostic clinique documenté, pas une auto-classification logicielle",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "ed_system_version",
+      "type_or_values": "DSM/CIM + version/texte historique",
+      "rule": "Garder la nomenclature source et le mapping séparés",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "ed_subtype",
+      "type_or_values": "Texte codifié selon nomenclature",
+      "rule": "Par exemple sous-type AN si documenté ; ne pas l'inférer d'un symptôme isolé",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "ed_diagnosis_source",
+      "type_or_values": "Dossier/clinicien/patient/non confirmé",
+      "rule": "Avec date et référence",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "ed_onset_age ou ed_onset_date",
+      "type_or_values": "Nombre/date + précision",
+      "rule": "Ne pas demander les deux si l'un suffit",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "ed_duration_months",
+      "type_or_values": "Nombre facultatif",
+      "rule": "Calculé seulement sur données compatibles ; estimé identifié",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "ed_current_course",
+      "type_or_values": "Actif/rémission rapportée/autre/inconnu",
+      "rule": "Statut clinique daté, pas déduit du BEWE",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "restrictive_pattern",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Comportement déclaré ; période de référence",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "binge_episodes_28d",
+      "type_or_values": "Entier ou estimation min/max",
+      "rule": "Crises distinctes des vomissements",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "compensatory_behaviors",
+      "type_or_values": "Liste : vomissements/laxatifs/diurétiques/exercice/restriction/autre",
+      "rule": "Présent/passé et période ; détails seulement pertinents",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "chew_spit",
+      "type_or_values": "Jamais/ancien/actuel/inconnu",
+      "rule": "Fréquence si utile, sans le classer comme vomissement",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "weight_kg, height_cm",
+      "type_or_values": "Décimaux + date/source",
+      "rule": "Facultatifs ; privilégier le dossier existant",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "relevant_conditions",
+      "type_or_values": "Liste/texte clinique",
+      "rule": "RGO documenté, antécédents digestifs, grossesse avec hyperémèse, autres expositions pertinentes",
+      "section": "6.2 TCA, temporalité et contexte somatique"
+    },
+    {
+      "expression": "vomiting_current_28d",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Les 28 derniers jours constituent une fenêtre proposée pour le futur",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_lifetime",
+      "type_or_values": "Jamais rapporté/ancien uniquement/actuel/inconnu",
+      "rule": "“Jamais” seulement après recherche explicite ; historique ambigu reste inconnu",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_days_28d",
+      "type_or_values": "Entier 0–28",
+      "rule": "Nombre de jours concernés",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_episodes_28d",
+      "type_or_values": "Entier ou min/max estimés",
+      "rule": "Nombre de vomissements, pas nombre de crises",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_pattern",
+      "type_or_values": "Quotidien/intermittent/périodes/autre + texte",
+      "rule": "Complète le nombre ; ne le remplace pas automatiquement",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_onset",
+      "type_or_values": "Date/âge + précision",
+      "rule": "Facultatif",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_duration_months",
+      "type_or_values": "Nombre + estimation",
+      "rule": "Cumul si documentable ; ne pas calculer une “dose acide” validée",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_stop_interval",
+      "type_or_values": "Nombre + unité + date de référence",
+      "rule": "Pour les anciens vomissements",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_past_peak",
+      "type_or_values": "Nombre/unité + période",
+      "rule": "Optionnel, charge ancienne ; jamais substitué à l'actuel",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "vomiting_context",
+      "type_or_values": "Auto-induit/spontané/autre/inconnu",
+      "rule": "Distinct du diagnostic TCA",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "post_vomit_rinse",
+      "type_or_values": "Oui/non/inconnu + produit",
+      "rule": "Déclaration ; pas preuve d'efficacité",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "post_vomit_brushing",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Si oui : délai estimé en minutes ou catégorie avec précision",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "reflux_symptoms",
+      "type_or_values": "Oui/non/inconnu + fréquence",
+      "rule": "Symptômes, pas diagnostic prouvé",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "reflux_documented",
+      "type_or_values": "Oui/non/inconnu + source",
+      "rule": "Distinguer diagnostic antérieur et suspicion",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "regurgitation_rumination",
+      "type_or_values": "Rapportée/documentée/suspectée/absente/inconnue",
+      "rule": "Ne pas reclasser automatiquement en vomissements",
+      "section": "6.3 Vomissements, reflux et régurgitations"
+    },
+    {
+      "expression": "tobacco_status",
+      "type_or_values": "Jamais/ancien/actuel/inconnu",
+      "rule": "Cigarettes/jour et durée en années si documentées",
+      "section": "6.4 Alimentation, habitudes et substances"
+    },
+    {
+      "expression": "tobacco_cigarettes_day",
+      "type_or_values": "Nombre ou plage",
+      "rule": "Ne pas convertir autres produits en cigarettes arbitrairement",
+      "section": "6.4 Alimentation, habitudes et substances"
+    },
+    {
+      "expression": "alcohol_status",
+      "type_or_values": "Aucun déclaré/ancien/actuel/inconnu",
+      "rule": "Fenêtre de référence explicite",
+      "section": "6.4 Alimentation, habitudes et substances"
+    },
+    {
+      "expression": "alcohol_units_week",
+      "type_or_values": "Nombre/plage + définition",
+      "rule": "Unité française 10 g si retenue ; sinon garder quantité brute et format du verre",
+      "section": "6.4 Alimentation, habitudes et substances"
+    },
+    {
+      "expression": "alcohol_beverage",
+      "type_or_values": "Catégories",
+      "rule": "Pertinent aussi pour le type d'exposition ; ne pas extrapoler une bouteille non précisée",
+      "section": "6.4 Alimentation, habitudes et substances"
+    },
+    {
+      "expression": "other_substances",
+      "type_or_values": "Table : type, actuel/passé, fréquence, voie si pertinente",
+      "rule": "Recueil proportionné, confidentialité renforcée, option refus",
+      "section": "6.4 Alimentation, habitudes et substances"
+    },
+    {
+      "expression": "brushing_daily",
+      "type_or_values": "Nombre ou plage",
+      "rule": "Autoriser zéro, moins d'une fois/jour, plusieurs fois ; fréquence hebdomadaire possible",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "brush_type",
+      "type_or_values": "Manuelle/électrique/les deux/autre/inconnu",
+      "rule": "Ne pas inférer la dureté",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "bristle_hardness",
+      "type_or_values": "Souple/médium/dure/inconnue",
+      "rule": "Déclarée",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "brushing_duration_min",
+      "type_or_values": "Nombre/plage",
+      "rule": "Optionnel",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "forceful_brushing_reported",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Séparé de lésions attribuées au brossage",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "toothpaste_name",
+      "type_or_values": "Texte court",
+      "rule": "Nom exact si connu",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "toothpaste_fluoride_ppm",
+      "type_or_values": "Nombre/inconnu",
+      "rule": "Seulement étiquette ou source vérifiable ; ne pas inférer de la marque",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "toothpaste_features",
+      "type_or_values": "Charbon/blanchissant/désensibilisant/autre",
+      "rule": "Liste descriptive ; ne pas inventer le RDA",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "interdental_cleaning",
+      "type_or_values": "Type et fréquence",
+      "rule": "Optionnel",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "hygiene_legacy",
+      "type_or_values": "Insuffisante/suffisante/iatrogène/texte",
+      "rule": "Conserver jugement historique ; le nouveau formulaire documente ses composantes",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "last_dental_visit",
+      "type_or_values": "Date ou intervalle/unité",
+      "rule": "Avec date de référence ; “5 mois” n'est pas un rendez-vous exact",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "usual_dentist",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Distinct d'une visite récente",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "access_barrier",
+      "type_or_values": "Coût/anxiété/honte/disponibilité/autre/aucun/inconnu",
+      "rule": "Raisons déclarées, plusieurs possibles",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "dental_pain",
+      "type_or_values": "Oui/non + intensité 0–10",
+      "rule": "Période : 7 derniers jours proposée ; échelle numérique, pas EVA graphique",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "chewing_difficulty",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Retentissement déclaré",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "aesthetic_concern",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Optionnel",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "dry_mouth_reported",
+      "type_or_values": "Oui/non/inconnu + fréquence",
+      "rule": "Ne pas renommer hyposialie",
+      "section": "6.5 Hygiène, recours et symptômes"
+    },
+    {
+      "expression": "bewe_sextant",
+      "type_or_values": "0/1/2/3 ou non évaluable/manquant",
+      "rule": "Six enregistrements nommés, jamais un tableau positionnel anonyme",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "bewe_worst_tooth",
+      "type_or_values": "Code FDI facultatif",
+      "rule": "Doit appartenir au sextant choisi",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "bewe_worst_surface",
+      "type_or_values": "Vestibulaire/palatine-linguale/occlusale-incisale",
+      "rule": "Optionnel ; ne remplace pas l'examen de toutes les surfaces pertinentes",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "bewe_total_derived",
+      "type_or_values": "Entier 0–18 ou null",
+      "rule": "Calcul contrôlé, jamais éditable directement",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "bewe_total_historical",
+      "type_or_values": "Entier 0–18 ou null",
+      "rule": "Total exact documenté sans sextants ; provenance et validation",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "bewe_legacy_band",
+      "type_or_values": "Texte/catégorie historique",
+      "rule": "Ne pas convertir automatiquement",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "restored_surfaces",
+      "type_or_values": "Localisation/type/date si connue",
+      "rule": "Une restauration peut masquer le tissu perdu",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "missing_teeth",
+      "type_or_values": "Liste FDI + cause si connue",
+      "rule": "Distinguer absence et érosion absente",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "mechanical_wear_signs",
+      "type_or_values": "Oui/non/non évalué + localisation",
+      "rule": "Observation clinique ; distinction étiologique prudente",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "awake_bruxism_reported",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Serrement/grincement ; période précisée",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "sleep_bruxism_reported",
+      "type_or_values": "Oui/non/inconnu",
+      "rule": "Patient/entourage/autre source",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "bruxism_clinical_signs",
+      "type_or_values": "Texte/codes + date",
+      "rule": "Séparé du déclaratif",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "bruxism_instrumental",
+      "type_or_values": "Résultat/source si existant",
+      "rule": "Optionnel ; ne pas créer un degré de certitude automatique",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "tmj_muscle_symptoms",
+      "type_or_values": "Douleur ATM/muscles/autre",
+      "rule": "Optionnel",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "dmft_d, dmft_m, dmft_f",
+      "type_or_values": "Entiers séparés",
+      "rule": "Nombre de dents ; M = absentes pour carie, pas toute dent absente",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "dmft_total",
+      "type_or_values": "Calculé ou historique identifié",
+      "rule": "Calcul si trois composantes disponibles et protocole défini ; plafonds selon dentition retenue",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "periodontal_legacy",
+      "type_or_values": "CPITN brut / autre indice",
+      "rule": "Garder l'indice d'origine ; ne pas l'appeler stade parodontal",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "plaque_gingival_findings",
+      "type_or_values": "Présence/absence/non évalué + description",
+      "rule": "Un pourcentage exige une méthode et un dénominateur",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "recession_sites",
+      "type_or_values": "Dent/site/profondeur mm si mesurée",
+      "rule": "Texte brut conservé si ancien classement incompris",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "extraoral_findings",
+      "type_or_values": "Sialadénose/asymétrie/autres/non évalué",
+      "rule": "Observation distincte de diagnostic étiologique",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "mucosal_findings",
+      "type_or_values": "Lésion/localisation/description/non évalué",
+      "rule": "Pas de diagnostic automatique",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "salivary_flow",
+      "type_or_values": "Valeur mL/min + protocole/date/conditions",
+      "rule": "Module optionnel ; stimulus, durée, volume et heure nécessaires",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "salivary_ph",
+      "type_or_values": "Nombre + méthode/heure/conditions",
+      "rule": "Module optionnel ; pas de diagnostic de reflux",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "masticatory_coefficient_legacy",
+      "type_or_values": "Valeur brute + méthode inconnue si besoin",
+      "rule": "À réintroduire seulement après clarification de son calcul et de son intérêt",
+      "section": "6.6 Examen, BEWE et autres domaines"
+    },
+    {
+      "expression": "prevention_protocol",
+      "type_or_values": "Aucun protocole proposé/modéré/avancé/personnalisé ; absence de réponse distincte",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "hbd_teaching",
+      "type_or_values": "Action indépendante oui/non/manquante ; case au début de Prévention, conservée lors des changements de protocole",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "protocol_version",
+      "type_or_values": "CMME-FM-2026-09 ; version du contenu du raccourci, pas preuve de validation clinique",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "anti_erosion_toothpaste",
+      "type_or_values": "Conseillé/non conseillé/non renseigné ; nom du produit facultatif",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "anti_erosion_rinse",
+      "type_or_values": "Conseillé/non conseillé/non applicable/non renseigné ; contexte après vomissement ; produit facultatif",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "tooth_mousse",
+      "type_or_values": "Conseillé/non conseillé/non renseigné ; produit exact conservé",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "tooth_mousse_route",
+      "type_or_values": "Directe/gouttière/les deux/non précisé ; visible si produit conseillé",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "tooth_mousse_frequency",
+      "type_or_values": "Quotidien par défaut dans la proposition avancée ; fréquence réelle conseillée modifiable",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "tooth_mousse_tray_minutes",
+      "type_or_values": "10 proposé pour l'application en gouttière ; modifiable ; ne pas appliquer automatiquement à la voie directe",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "vomiting_semirigid_tray",
+      "type_or_values": "Conseillée/non conseillée/non applicable/non renseigné ; option indépendante sans valeur initiale",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "bruxism_tray_existing",
+      "type_or_values": "Oui/non/inconnu ; séparé des deux autres usages de gouttières",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "prevention_status",
+      "type_or_values": "Conseillé ce jour/déjà utilisé selon le patient/réalisé pendant la consultation/refusé/inconnu, par composante",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "reported_use",
+      "type_or_values": "Facultatif : usage actuel déclaré ; ne jamais le déduire du conseil",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "prevention_note",
+      "type_or_values": "Texte court facultatif pour adaptation",
+      "rule": "",
+      "section": "6.7 Prévention, besoins et orientations"
+    },
+    {
+      "expression": "acidic_drinks_selection",
+      "type_or_values": "multi-select + status",
+      "rule": "Aucune rapportée exclusive des catégories positives ; vide = non renseigné",
+      "section": "Ajouts confirmés récents"
+    },
+    {
+      "expression": "acidic_drinks_free_text",
+      "type_or_values": "text",
+      "rule": "Précisions libres ; exclu export standard",
+      "section": "Ajouts confirmés récents"
+    },
+    {
+      "expression": "acidic_foods_selection",
+      "type_or_values": "multi-select + status",
+      "rule": "Aucun rapporté exclusif des catégories positives",
+      "section": "Ajouts confirmés récents"
+    },
+    {
+      "expression": "acidic_foods_free_text",
+      "type_or_values": "text",
+      "rule": "Précisions libres ; exclu export standard",
+      "section": "Ajouts confirmés récents"
+    },
+    {
+      "expression": "consultation_observations",
+      "type_or_values": "text",
+      "rule": "Zone finale indépendante ; hors export recherche standard",
+      "section": "Ajouts confirmés récents"
+    },
+    {
+      "expression": "prevention_protocol_legacy_raw",
+      "type_or_values": "text",
+      "rule": "Libellé source, ne reconstruit aucune composante",
+      "section": "Ajouts confirmés récents"
+    }
+  ]
+}

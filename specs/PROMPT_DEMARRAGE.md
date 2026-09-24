@@ -1,0 +1,13 @@
+Tu reprends le projet CMME de Franck Moyal. Construis une application de bureau de recueil clinique dentaire et de statistiques, locale et hors ligne, utilisable pendant les consultations TCA de 10 à 15 minutes à Sainte-Anne.
+
+Lis d'abord README.md, CLAUDE.md et docs/00_DECISIONS_FINALES.md, puis la spécification consolidée, les contrats de données, le design, l'architecture, l'import et la recette. Examine les deux maquettes de design. Elles sont des références visuelles interactives, pas une application persistante. Leurs champs simplifiés et présélections fictives ne remplacent pas les règles métier.
+
+L'interface de consultation doit rester sur UNE page continue dans cet ordre exact : Contexte, Habitudes, Expositions, Examen, Prévention, Observations. Les raccourcis font défiler la page et ne cachent pas les autres sections. Garde un aspect de produit professionnel soigné. Pars d'Iris comme thème de développement, conserve Lagune comme choix alternatif ; le choix de Franck n'est pas définitivement arrêté.
+
+Implémente la création d'un dossier, la saisie complète et sa sauvegarde durable, le BEWE par sextant, les protocoles de prévention, le tableau filtrable, les statistiques descriptives, l'import XLSX/CSV avec revue des anomalies, les exports pseudonymisés et la sauvegarde/restauration chiffrée. L'analyse rétrospective des données déjà prises est prioritaire. N'intègre aucune donnée de patient réelle dans le code.
+
+Dans Prévention, placer d'abord la case indépendante Enseignement HBD. Permettre Aucun protocole proposé, Modéré, Avancé, Personnalisé ; distinguer non renseigné et aucun protocole. Boissons et aliments : deux menus à cases multiples, un champ libre chacun, et précisions de fréquence/quantité. Terminer la page par des observations libres. Aucun document ne doit être généré à la fin de la consultation.
+
+Avant de coder, inspecte l'environnement et le dépôt, relève les contraintes de packaging, puis écris un plan bref et commence le premier lot fonctionnel. La pile recommandée est Tauri + React + TypeScript avec base SQLCipher via une intégration native réellement vérifiée. Ne bloque pas sur les choix réversibles et ne réouvre pas les décisions utilisateur déjà fixées. Vérifie la version macOS réelle avant le packaging final, sans la déduire de l'agent utilisateur du navigateur.
+
+Les contrôles de la recette et les cas de tests fournis doivent devenir des vérifications exécutables. Ne fabrique aucun résultat de test. À chaque jalon, fournis un parcours réellement utilisable et une liste honnête des limites restantes. Continue jusqu'à une V1 complète dans l'environnement disponible ; indique explicitement les étapes d'installation ou de build sur le Mac qui ne peuvent pas être exécutées ici.

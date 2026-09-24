@@ -1,0 +1,9 @@
+﻿code_source_fictif;age_brut;service_brut;vomissements_brut;bewe_brut;prevention_brut
+SYN-001;22;Centre expert;Oui;0;Enseignement HBD
+SYN-002;31;SAS;Non;1–5 (3);Modéré
+SYN-003;28;Centre expert;Oui;6–11 (11);Avancé
+SYN-004;20–30;HDJ;Non;1–5 (7);
+SYN-005;24;Centre expert;Oui;12–18 (14);Avancé
+SYN-006;35;SAS;;6–11;
+SYN-007;<20;HDJ;;◊;
+SYN-008;26;Centre expert;Oui;6–11 (8 à 9);Modéré

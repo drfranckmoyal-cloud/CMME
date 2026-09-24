@@ -1,0 +1,131 @@
+{
+  "package": "CMME_CLAUDE_CODE_HANDOFF",
+  "version": "1.0",
+  "date": "2026-09-23",
+  "kind": "specifications_and_interactive_design_references",
+  "production_application_included": false,
+  "real_patient_records_included": false,
+  "validation": [
+    "JavaScript syntax checked for both references",
+    "Six visible consultation sections in required order verified",
+    "JSON parsing verified",
+    "Archive integrity and manifest hashes verified at packaging"
+  ],
+  "limitations": [
+    "No production application build",
+    "No automated browser visual QA",
+    "Clinical and research validation still separate"
+  ],
+  "files": [
+    {
+      "path": "CLAUDE.md",
+      "bytes": 3170,
+      "sha256": "0b853a615da2e709a2a84557fd30db0a6e94165a685d3e729168dc96fb7a3224"
+    },
+    {
+      "path": "PROMPT_DEMARRAGE.md",
+      "bytes": 2832,
+      "sha256": "05aca90fcb9db1184dcbac7ffe987d5575102415949487cca0b9880c433459af"
+    },
+    {
+      "path": "README.md",
+      "bytes": 3180,
+      "sha256": "9fc951cb3a86f76d996904a5ddc984fe64ca8e77bee681e2b303340ef41b0168"
+    },
+    {
+      "path": "data/README.md",
+      "bytes": 1140,
+      "sha256": "e57d4d6f992bfefb8e8fba1d2cce9672cfa2116612ce3e30237cd05d71e97412"
+    },
+    {
+      "path": "data/dictionnaire_champs.json",
+      "bytes": 28592,
+      "sha256": "b5ac98336096f5484f3a7628ace92aac8d93343c5dd2d6ea21b13132e4c93eed"
+    },
+    {
+      "path": "data/import_synthetique.csv",
+      "bytes": 417,
+      "sha256": "904f0985e9bb045028babd38cddd4eaffe1179433c84867703f577bce5fdf5e1"
+    },
+    {
+      "path": "design/Iris.html",
+      "bytes": 114251,
+      "sha256": "4716b83a8504d63fa0dbfbba903a5d759d2fcdfaa1c7fb7e317dd0ce9ee5f959"
+    },
+    {
+      "path": "design/Lagune.html",
+      "bytes": 117294,
+      "sha256": "047237ed1b34abf1689895422348b0f03438ae8326c6a529ab47e36ce0e3b1be"
+    },
+    {
+      "path": "design/README.md",
+      "bytes": 923,
+      "sha256": "eb4dff3e4f63538cdc8780dc9038bd5b36b28fa82458ef3c6f45facd19dc2052"
+    },
+    {
+      "path": "design/sources/Iris.fragment.html",
+      "bytes": 37194,
+      "sha256": "3d59523b8f71e7ba805de4c7e44c4760bebc6081410afb4d3bc8b97f577608d0"
+    },
+    {
+      "path": "design/sources/Lagune.fragment.html",
+      "bytes": 40228,
+      "sha256": "34b568be6617b50e8a77923c154de8752761f6ea1d860d25eda969aff5e3bea1"
+    },
+    {
+      "path": "design/tokens.json",
+      "bytes": 993,
+      "sha256": "0392bf3d5b8264707e86b9db3b9c1ce5cb44194f78c6035f5cd46f079e623522"
+    },
+    {
+      "path": "docs/00_DECISIONS_FINALES.md",
+      "bytes": 3347,
+      "sha256": "9647d5354423af5825b4946bc8b955bf9757927d79d753bb3c07f39457cf34bb"
+    },
+    {
+      "path": "docs/01_SPECIFICATION_CONSOLIDEE.md",
+      "bytes": 74645,
+      "sha256": "296463ede6b53cd422a0f6fa382bbd29e711d52e01785d00d76aaee0b8b837cd"
+    },
+    {
+      "path": "docs/02_CONTRATS_DE_DONNEES.md",
+      "bytes": 5701,
+      "sha256": "cd79d59fff190d101793d6632f16b3f70a4f71311bfb1261fc7fee53029f7dc5"
+    },
+    {
+      "path": "docs/03_DESIGN_ET_PARCOURS.md",
+      "bytes": 6302,
+      "sha256": "b63b5b3a24d14639d7a63ed9e8ed02987c4223f6173421e3266164b6ed9d0117"
+    },
+    {
+      "path": "docs/04_ARCHITECTURE_ET_REALISATION.md",
+      "bytes": 5633,
+      "sha256": "74a9e82a670a0349daff778277c9f7396605f7bee0ebfde18f15ebc964fe0605"
+    },
+    {
+      "path": "docs/05_IMPORT_ET_REPRISE.md",
+      "bytes": 4710,
+      "sha256": "2b995630cfb3bf48ae1a8948dfb84ae3469bdce17bd02c225dfa4f4282ad1ce6"
+    },
+    {
+      "path": "docs/06_RECETTE.md",
+      "bytes": 4170,
+      "sha256": "9c9eaada95916b9a7ff92aca51ae88bb7a3c6420c58c169c7a62962b6d790c36"
+    },
+    {
+      "path": "research/ANALYSE_RETROSPECTIVE_V1.md",
+      "bytes": 19371,
+      "sha256": "15c337fca1cd01138092bf0ac67f2281bcc2b807e58768508de66a37e6870e00"
+    },
+    {
+      "path": "research/README.md",
+      "bytes": 1532,
+      "sha256": "76ebfe4ed8ecd5414ec28624636ad083625ed5f07aa7cc09d50dbbf36c9f97d4"
+    },
+    {
+      "path": "tests/cas_metier.json",
+      "bytes": 5707,
+      "sha256": "a30a031e34615961b5a98d2b57e4f2954c3f61278d65d17a15c1455f4e04c1e1"
+    }
+  ]
+}

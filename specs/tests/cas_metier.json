@@ -1,0 +1,270 @@
+{
+  "version": "1.0",
+  "synthetic": true,
+  "cases": [
+    {
+      "id": "bewe-1",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 0,
+        "upper_anterior": 0,
+        "upper_left": 0,
+        "lower_left": 0,
+        "lower_anterior": 0,
+        "lower_right": 0
+      },
+      "expected": {
+        "total": 0,
+        "category": "0-2"
+      }
+    },
+    {
+      "id": "bewe-2",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 1,
+        "upper_anterior": 0,
+        "upper_left": 1,
+        "lower_left": 0,
+        "lower_anterior": 0,
+        "lower_right": 0
+      },
+      "expected": {
+        "total": 2,
+        "category": "0-2"
+      }
+    },
+    {
+      "id": "bewe-3",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 1,
+        "upper_anterior": 1,
+        "upper_left": 1,
+        "lower_left": 0,
+        "lower_anterior": 0,
+        "lower_right": 0
+      },
+      "expected": {
+        "total": 3,
+        "category": "3-8"
+      }
+    },
+    {
+      "id": "bewe-4",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 2,
+        "upper_anterior": 2,
+        "upper_left": 1,
+        "lower_left": 1,
+        "lower_anterior": 1,
+        "lower_right": 1
+      },
+      "expected": {
+        "total": 8,
+        "category": "3-8"
+      }
+    },
+    {
+      "id": "bewe-5",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 2,
+        "upper_anterior": 2,
+        "upper_left": 2,
+        "lower_left": 1,
+        "lower_anterior": 1,
+        "lower_right": 1
+      },
+      "expected": {
+        "total": 9,
+        "category": "9-13"
+      }
+    },
+    {
+      "id": "bewe-6",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 3,
+        "upper_anterior": 2,
+        "upper_left": 2,
+        "lower_left": 2,
+        "lower_anterior": 2,
+        "lower_right": 2
+      },
+      "expected": {
+        "total": 13,
+        "category": "9-13"
+      }
+    },
+    {
+      "id": "bewe-7",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 3,
+        "upper_anterior": 3,
+        "upper_left": 2,
+        "lower_left": 2,
+        "lower_anterior": 2,
+        "lower_right": 2
+      },
+      "expected": {
+        "total": 14,
+        "category": "14-18"
+      }
+    },
+    {
+      "id": "bewe-8",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 3,
+        "upper_anterior": 3,
+        "upper_left": 3,
+        "lower_left": 3,
+        "lower_anterior": 3,
+        "lower_right": 3
+      },
+      "expected": {
+        "total": 18,
+        "category": "14-18"
+      }
+    },
+    {
+      "id": "bewe-9",
+      "kind": "bewe_sum",
+      "input": {
+        "upper_right": 1,
+        "upper_anterior": 2,
+        "upper_left": 1,
+        "lower_left": null,
+        "lower_anterior": 2,
+        "lower_right": 1
+      },
+      "expected": {
+        "total": null,
+        "category": null
+      }
+    },
+    {
+      "id": "import-10",
+      "kind": "legacy_bewe_proposal",
+      "input": "6–11 (9)",
+      "expected": {
+        "proposed_total": 9,
+        "flag": null,
+        "sextants_reconstructed": false,
+        "requires_review": false
+      }
+    },
+    {
+      "id": "import-11",
+      "kind": "legacy_bewe_proposal",
+      "input": "1–5 (7)",
+      "expected": {
+        "proposed_total": 7,
+        "flag": "band_mismatch",
+        "sextants_reconstructed": false,
+        "requires_review": true
+      }
+    },
+    {
+      "id": "import-12",
+      "kind": "legacy_bewe_proposal",
+      "input": "0",
+      "expected": {
+        "proposed_total": 0,
+        "flag": null,
+        "sextants_reconstructed": false,
+        "requires_review": false
+      }
+    },
+    {
+      "id": "import-13",
+      "kind": "legacy_bewe_proposal",
+      "input": "6–11",
+      "expected": {
+        "proposed_total": null,
+        "flag": "band_only",
+        "sextants_reconstructed": false,
+        "requires_review": true
+      }
+    },
+    {
+      "id": "import-14",
+      "kind": "legacy_bewe_proposal",
+      "input": "6–11 (8 à 9)",
+      "expected": {
+        "proposed_total": null,
+        "flag": "ambiguous_exact_value",
+        "sextants_reconstructed": false,
+        "requires_review": true
+      }
+    },
+    {
+      "id": "import-15",
+      "kind": "legacy_bewe_proposal",
+      "input": "(19)",
+      "expected": {
+        "proposed_total": null,
+        "flag": "out_of_range",
+        "sextants_reconstructed": false,
+        "requires_review": true
+      }
+    },
+    {
+      "id": "import-16",
+      "kind": "legacy_bewe_proposal",
+      "input": "",
+      "expected": {
+        "proposed_total": null,
+        "flag": "not_recorded",
+        "sextants_reconstructed": false,
+        "requires_review": true
+      }
+    },
+    {
+      "id": "import-17",
+      "kind": "legacy_bewe_proposal",
+      "input": "◊",
+      "expected": {
+        "proposed_total": null,
+        "flag": "unparseable",
+        "sextants_reconstructed": false,
+        "requires_review": true
+      }
+    },
+    {
+      "id": "invalid-sextant--1",
+      "kind": "bewe_sextant_validation",
+      "input": -1,
+      "expected": {
+        "accepted": false
+      }
+    },
+    {
+      "id": "invalid-sextant-4",
+      "kind": "bewe_sextant_validation",
+      "input": 4,
+      "expected": {
+        "accepted": false
+      }
+    },
+    {
+      "id": "invalid-sextant-1.5",
+      "kind": "bewe_sextant_validation",
+      "input": 1.5,
+      "expected": {
+        "accepted": false
+      }
+    },
+    {
+      "id": "invalid-sextant-2x",
+      "kind": "bewe_sextant_validation",
+      "input": "2x",
+      "expected": {
+        "accepted": false
+      }
+    }
+  ]
+}

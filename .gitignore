@@ -1,0 +1,38 @@
+# Secrets et configuration locale
+.env
+.env.*
+!.env.example
+
+# Bases de données et sauvegardes : jamais dans le dépôt
+*.db
+*.db-wal
+*.db-shm
+*.sqlite
+*.sqlite3
+*.cmmebak
+
+# Données réelles : jamais dans le dépôt
+donnees-reelles/
+*.numbers
+*.pages
+
+# Python
+.venv
+.venv/
+.venv.nosync/
+__pycache__/
+*.pyc
+
+# Node / Vite
+node_modules
+node_modules/
+dist/
+*.tsbuildinfo
+
+# Rust / Tauri
+target/
+src-tauri/gen/schemas/
+
+# Divers
+.DS_Store
+*.log
