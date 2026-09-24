@@ -5,7 +5,7 @@ import type { EncounterRow, Filter } from "../types";
 import { fmtClinicalDate, ORIGIN_LABELS, PROTOCOL_LABELS, SERVICE_LABELS, STATUS_LABELS, VOMITING_LABELS } from "../lib/format";
 
 const COLUMNS = [
-  ["code", "Dossier"], ["date", "Date"], ["service", "Service"], ["age", "Âge"], ["vomiting", "Vomissements"],
+  ["code", "Patient"], ["date", "Date"], ["service", "Service"], ["age", "Âge"], ["vomiting", "Vomissements"],
   ["bewe", "BEWE"], ["prevention", "Prévention"], ["mode", "Recueil"], ["status", "Statut / qualité"],
 ] as const;
 type Col = (typeof COLUMNS)[number][0];
@@ -21,7 +21,7 @@ export function FilterBar({ filter, setFilter, withText = true }: { filter: Filt
     <div className="toolbar" role="search">
       {withText && (
         <div className="field search"><div className="label"><span>Rechercher (code, nom en espace clinique)</span></div>
-          <input value={filter.text ?? ""} onChange={(e) => set({ text: e.target.value })} placeholder="Code du dossier…" /></div>
+          <input value={filter.text ?? ""} onChange={(e) => set({ text: e.target.value })} placeholder="Nom, prénom ou code…" /></div>
       )}
       <div className="field"><div className="label"><span>Du</span></div><input type="date" value={filter.date_from ?? ""} onChange={(e) => set({ date_from: e.target.value || undefined })} /></div>
       <div className="field"><div className="label"><span>Au</span></div><input type="date" value={filter.date_to ?? ""} onChange={(e) => set({ date_to: e.target.value || undefined })} /></div>
@@ -51,8 +51,9 @@ export function Dossiers({ filter, setFilter, clinical, onOpen, onNew, scrollKey
   const [rows, setRows] = useState<EncounterRow[] | null>(null);
   const [err, setErr] = useState<string | null>(null);
   const [cols, setCols] = useState<Col[]>(loadCols);
-  const [showIdentity, setShowIdentity] = useState(false);
-  const [sort, setSort] = useState<{ key: Col; dir: 1 | -1 }>({ key: "date", dir: -1 });
+  const [showIdentity, setShowIdentityState] = useState(() => { try { return localStorage.getItem("cmme.showIdentity") !== "0"; } catch { return true; } });
+  const setShowIdentity = (v: boolean) => { setShowIdentityState(v); try { localStorage.setItem("cmme.showIdentity", v ? "1" : "0"); } catch { /* sans conséquence */ } };
+  const [sort, setSort] = useState<{ key: Col; dir: 1 | -1 }>({ key: "code", dir: 1 });
 
   useEffect(() => {
     let alive = true;
@@ -68,7 +69,7 @@ export function Dossiers({ filter, setFilter, clinical, onOpen, onNew, scrollKey
     if (!rows) return [];
     const key = (r: EncounterRow): string | number => {
       switch (sort.key) {
-        case "code": return r.patient_code;
+        case "code": return (r.display_name ?? r.patient_code).toLocaleLowerCase("fr");
         case "date": return r.visit_date ?? "";
         case "service": return r.service_code ?? "";
         case "age": return r.age_years ?? r.age_band?.[0] ?? -1;
@@ -122,7 +123,7 @@ export function Dossiers({ filter, setFilter, clinical, onOpen, onNew, scrollKey
                 <tr key={r.encounter_id} className="clickable" tabIndex={0}
                   onClick={() => { scrollKey.current = window.scrollY; onOpen(r.encounter_id); }}
                   onKeyDown={(e) => { if (e.key === "Enter") { scrollKey.current = window.scrollY; onOpen(r.encounter_id); } }}>
-                  {cols.includes("code") && <td><strong style={{ color: "var(--accent)" }}>{r.patient_code}</strong>{r.display_name ? <div className="small muted">{r.display_name}</div> : null}</td>}
+                  {cols.includes("code") && <td>{r.display_name ? <><strong style={{ color: "var(--accent)" }}>{r.display_name}</strong><div className="small muted">{r.patient_code}</div></> : <strong style={{ color: "var(--accent)" }}>{r.patient_code}</strong>}</td>}
                   {cols.includes("date") && <td>{fmtClinicalDate(r.visit_date)}{r.visit_date_precision && r.visit_date_precision !== "day" ? <span className="origin">({r.visit_date_precision === "month" ? "mois" : "année"})</span> : null}</td>}
                   {cols.includes("service") && <td>{r.service_code ? SERVICE_LABELS[r.service_code] : <span className="muted">—</span>}</td>}
                   {cols.includes("age") && <td>{age(r)}</td>}

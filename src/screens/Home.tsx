@@ -42,7 +42,7 @@ export function Home({ practitioner, demo, onNew, onSearch, onImport, onOpen, on
           {s && s.recent.length === 0 && <div className="empty-state">Aucune consultation.</div>}
           {s?.recent.map((r) => (
             <div key={r.encounter_id} className="minirow">
-              <button type="button" className="link" onClick={() => onOpen(r.encounter_id)}>{r.patient_code}</button>
+              <button type="button" className="link" onClick={() => onOpen(r.encounter_id)}>{r.display_name ?? r.patient_code}</button>
               <span className="small">{fmtClinicalDate(r.visit_date)} · {r.service_code ? SERVICE_LABELS[r.service_code] : "—"} · {STATUS_LABELS[r.status]}</span>
             </div>
           ))}

@@ -351,8 +351,9 @@ fn stats(state: State<AppState>, filter: Filter) -> R<Value> {
 
 #[tauri::command]
 fn home_summary(state: State<AppState>) -> R<Value> {
+    let clinical = !state.is_demo();
     state.with(|s| {
-        let rows = s.all_rows(false)?;
+        let rows = s.all_rows(clinical)?;
         let docs = s.import_documents()?;
         Ok(json!({
             "drafts": rows.iter().filter(|r| r.status != "validated").count(),

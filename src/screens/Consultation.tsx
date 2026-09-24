@@ -197,11 +197,11 @@ export function Consultation({ bundle, encounterId, clinical, registerFlush, onO
 
       <div className="sticky-head">
         <div className="patient">
-          <div className="patient-avatar" aria-hidden="true">{m.patient_code.slice(-2)}</div>
+          <div className="patient-avatar" aria-hidden="true">{clinical && name ? name.split(/\s+/).map((w) => w[0]).join("").slice(0, 2).toUpperCase() : m.patient_code.slice(-2)}</div>
           <div>
-            <div className="patient-name">Dossier {m.patient_code}{clinical && name ? ` · ${name}` : ""}</div>
+            <div className="patient-name">{clinical && name ? name : `Dossier ${m.patient_code}`}</div>
             <div className="meta">
-              {fmtClinicalDate(m.visit_date)} · {m.service_code ? SERVICE_LABELS[m.service_code] : "service non renseigné"}
+              {clinical && name ? `Dossier ${m.patient_code} · ` : ""}{fmtClinicalDate(m.visit_date)} · {m.service_code ? SERVICE_LABELS[m.service_code] : "service non renseigné"}
               {m.service_label_source ? ` (source : ${m.service_label_source})` : ""} · {legacy ? "ancien recueil" : "recueil structuré"} · {m.examiner ?? ""}
             </div>
           </div>
@@ -303,7 +303,7 @@ export function Consultation({ bundle, encounterId, clinical, registerFlush, onO
             <div className="minirow"><span>Boissons</span><span>{valueText("acidic_drinks_status") === "none_reported" ? "Aucune" : enc.exposures.filter((x) => x.grp === "drink").length || "Non renseigné"}</span></div>
             <div className="minirow"><span>Aliments</span><span>{valueText("acidic_foods_status") === "none_reported" ? "Aucun" : enc.exposures.filter((x) => x.grp === "food").length || "Non renseigné"}</span></div>
           </div>
-          {clinical && !legacy && <button type="button" className="btn small" onClick={() => setIdentityOpen(true)}>Identité clinique…</button>}
+          {clinical && <button type="button" className="btn small" onClick={() => setIdentityOpen(true)}>Identité clinique…</button>}
           {others.length > 1 && (
             <div className="asidenote">
               <strong>Autres consultations du dossier</strong>
