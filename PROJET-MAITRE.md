@@ -69,6 +69,8 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 | Destination autorisée des sauvegardes | Franck / DSI Sainte-Anne |
 | Cadre institutionnel (DPO, MR-004) pour l'usage réel | Franck / établissement |
 | Signature/notarisation Apple (compte développeur) si diffusion | Franck |
+| H-0146 et H-0251 : même personne ? | Franck |
+| Modalités de l'étude (question, population, période, critères) | Franck, avec Claude |
 
 ## Journal
 
@@ -99,6 +101,10 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
   `~/CMME-donnees/exports/` : 270 patients inclus (une visite index chacun), BEWE analysable 258/270, médiane 4
   [0–7], ≥9 : 57/258 ; recalcul indépendant identique. Écran Étude : choix « ancien + nouveau » ou « nouveau
   uniquement », période facultative.
+- 24/09/2026 — Fusion H-0245 → H-0029 (confirmée par Franck), fiche Pages du 10/11 intégrée au dossier fusionné ;
+  brouillon C2026-001 supprimé ; 18 fiches « template copie » sans nom mises à la Corbeille (récupérables).
+  Reste une paire homonyme H-0146 / H-0251 (même âge, services et BEWE différents) : décision de Franck attendue.
+  Base : 270 consultations, 269 dossiers.
 - 24/09/2026 — App installée dans /Applications et ajoutée au Dock. Franck confirme que la version finale s'ouvre.
 
 ## Garde-fous

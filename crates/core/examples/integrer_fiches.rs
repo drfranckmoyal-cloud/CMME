@@ -23,17 +23,18 @@ fn main() {
     };
     let mut s = Store::open(&db, &key, false, "import").unwrap();
     // --conflits-bewe : reprendre seulement les fiches écartées pour BEWE divergent lors d'un passage précédent.
-    if args.iter().any(|a| a == "--conflits-bewe") {
+    if args.iter().any(|a| a == "--conflits-bewe" || a == "--conflits-nom") {
+        let reason = if args.iter().any(|a| a == "--conflits-nom") { "plusieurs dossiers portent ce nom" } else { "BEWE divergent" };
         let mut files = vec![];
         for d in s.import_documents().unwrap().iter().filter(|d| d.format == "pages-txt") {
             for r in s.import_records(&d.id, Some("excluded")).unwrap() {
-                if r.exclusion_reason.as_deref() == Some("BEWE divergent") {
+                if r.exclusion_reason.as_deref() == Some(reason) {
                     files.push(r.cells[0].1.clone());
                 }
             }
         }
         fiches.retain(|f| files.contains(&f.file));
-        println!("Fiches à reprendre (BEWE divergent) : {}", fiches.len());
+        println!("Fiches à reprendre ({reason}) : {}", fiches.len());
     }
     s.author = format!("{} (fiches Pages)", s.setting("practitioner_name").unwrap().unwrap_or_default());
     let before = s.all_rows(false).unwrap();
