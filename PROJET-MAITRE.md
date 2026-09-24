@@ -68,7 +68,6 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 | Fenêtres de référence (28 j vomissements, 7 j habitudes) | Franck / équipe TCA |
 | Destination autorisée des sauvegardes | Franck / DSI Sainte-Anne |
 | Cadre institutionnel (DPO, MR-004) pour l'usage réel | Franck / établissement |
-| Confirmer d'un clic l'ouverture de la version finale (trousseau réel) | Franck |
 | Signature/notarisation Apple (compte développeur) si diffusion | Franck |
 
 ## Journal
@@ -78,6 +77,7 @@ Recette détaillée : `docs/RECETTE_RESULTATS.md`. Limites : `docs/LIMITES.md`. 
 - 24/09/2026 — V1 construite : 27 tests automatiques + test trousseau passent ; parcours vérifiés à l'écran
   (démo : saisie, BEWE, prévention, terminer, import CSV synthétique, tableau, statistiques, thèmes). Build release
   .app/.dmg arm64. Poussé sur GitHub.
+- 24/09/2026 — App installée dans /Applications et ajoutée au Dock. Franck confirme que la version finale s'ouvre.
 
 ## Garde-fous
 

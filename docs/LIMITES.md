@@ -6,8 +6,7 @@
   l'établissement (DSI/RSSI, DPO, qualification MR-004 du projet rétrospectif). L'application ne le règle pas.
 - **Pilote 10–15 minutes** sur dix consultations : non fait.
 - **Mode avion** : non testé formellement (aucune fonction réseau n'existe dans le code).
-- **Version finale** : l'ouverture d'un profil dans la version `release` (trousseau réel) reste à confirmer d'un clic ;
-  l'accès au trousseau est vérifié par un test séparé.
+- **Version finale** : installée dans Applications, ouverture confirmée par Franck le 24/09/2026.
 - **Import réel** : testé seulement sur fichiers synthétiques. Le mapping du vrai classeur (noms de colonnes, feuilles,
   formats de dates) sera à contrôler sur l'export XLSX, dans l'espace clinique.
 
